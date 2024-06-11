@@ -1,8 +1,8 @@
 "use client";
 
-import { pinyin } from "pinyin-pro";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDocumentStore } from "~/lib/store";
+import { generateGrid } from "~/lib/utils";
 
 export function MainGrid() {
   const [input, setInput] = useState("");
@@ -21,19 +21,13 @@ export function MainGrid() {
   const content = useDocumentStore((state) => state.content);
 
   function handleProcessInput() {
-    let i = 0;
-    let j = 0;
-    for (const char of input) {
-      console.log(pinyin(char, { removeNonZh: true }));
-      if (char === "\n") {
-        j = 0;
-        i++;
-        continue;
-      }
-      j = (j + 1) % columnCount;
-      i = j === 0 ? i + 1 : i;
-    }
+    generateGrid(input);
   }
+
+  useEffect(() => {
+    generateGrid(input);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rowCount, columnCount]);
 
   return (
     <div className="flex flex-col gap-4">
@@ -126,7 +120,7 @@ export function MainGrid() {
               gap: `${columnGap}px`,
             }}
           >
-            {rows.map((_, j) => (
+            {rows.map((cell, j) => (
               <div id={`${i}-${j}`} key={j} className="flex flex-col">
                 <div
                   contentEditable
@@ -136,7 +130,9 @@ export function MainGrid() {
                     width: `${mainTextSize * 2}px`,
                     height: `${secondaryTextSize * 2}px`,
                   }}
-                ></div>
+                >
+                  {cell.pinyin}
+                </div>
 
                 <div
                   contentEditable
@@ -146,7 +142,9 @@ export function MainGrid() {
                     width: `${mainTextSize * 2}px`,
                     height: `${mainTextSize * 2}px`,
                   }}
-                ></div>
+                >
+                  {cell.value}
+                </div>
               </div>
             ))}
           </div>
