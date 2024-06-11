@@ -5,6 +5,7 @@ export function generateGrid(input: string) {
   const columnCount = useDocumentStore.getState().config.columnCount;
   const rowCount = useDocumentStore.getState().config.rowCount;
 
+  const setDocument = useDocumentStore.getState().setDocument;
   const setContent = useDocumentStore.getState().setContent;
 
   const nextContent = [];
@@ -27,7 +28,7 @@ export function generateGrid(input: string) {
   for (const char of input) {
     if (char === "\n" && prevStep !== "last-char") {
       col = 0;
-      row++;
+      row = (row + 1) % rowCount;
       continue;
     }
     const isLastChar = (index + 1) % columnCount === 0;
@@ -37,7 +38,7 @@ export function generateGrid(input: string) {
     };
     nextContent[row]![col] = value;
     col = (col + 1) % columnCount;
-    if (isLastChar) row++;
+    if (isLastChar) row = (row + 1) % rowCount;
     index++;
     prevStep = isLastChar ? "last-char" : "";
   }

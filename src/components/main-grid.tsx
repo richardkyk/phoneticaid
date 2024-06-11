@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useDocumentStore } from "~/lib/store";
 import { generateGrid } from "~/lib/utils";
 
 export function MainGrid() {
-  const [input, setInput] = useState("");
+  const inputRef = useRef<HTMLTextAreaElement>(null);
 
   const mainTextSize = useDocumentStore((state) => state.config.mainTextSize);
   const secondaryTextSize = useDocumentStore(
@@ -21,11 +21,11 @@ export function MainGrid() {
   const content = useDocumentStore((state) => state.content);
 
   function handleProcessInput() {
-    generateGrid(input);
+    generateGrid(inputRef.current?.value ?? "");
   }
 
   useEffect(() => {
-    generateGrid(input);
+    generateGrid(inputRef.current?.value ?? "");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rowCount, columnCount]);
 
@@ -96,11 +96,7 @@ export function MainGrid() {
         </div>
       </div>
       <div className="flex flex-col gap-2">
-        <textarea
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          className="h-20 w-full border"
-        />
+        <textarea ref={inputRef} className="h-20 w-full border" />
         <button onClick={handleProcessInput}>Generate</button>
       </div>
 
