@@ -1,41 +1,36 @@
 "use client";
 
 import { pinyin } from "pinyin-pro";
-import { createRef, useMemo, useState } from "react";
+import { useState } from "react";
+import { useDocumentStore } from "~/lib/store";
 
 export function MainGrid() {
-  const [mainFontSize, setMainFontSize] = useState(16);
-  const [secondaryFontSize, setSecondaryFontSize] = useState(10);
+  const [input, setInput] = useState("");
 
-  const [columns, setColumns] = useState(16);
-  const [rows, setRows] = useState(10);
+  const mainTextSize = useDocumentStore((state) => state.config.mainTextSize);
+  const secondaryTextSize = useDocumentStore(
+    (state) => state.config.secondaryTextSize,
+  );
+  const columnCount = useDocumentStore((state) => state.config.columnCount);
+  const rowCount = useDocumentStore((state) => state.config.rowCount);
+  const columnGap = useDocumentStore((state) => state.config.columnGap);
+  const rowGap = useDocumentStore((state) => state.config.rowGap);
 
-  const [columnGap, setColumnGap] = useState(10);
-  const [rowGap, setRowGap] = useState(20);
+  const setDocument = useDocumentStore((state) => state.setDocument);
 
-  const [content, setConent] = useState("");
-
-  const refMap = useMemo(() => {
-    const refMap = new Map<string, React.RefObject<HTMLDivElement>>();
-    for (let i = 0; i < rows; i++) {
-      for (let j = 0; j < columns; j++) {
-        const id = `${i}-${j}`;
-        refMap.set(id, createRef());
-      }
-    }
-    return refMap;
-  }, [columns, rows]);
+  const content = useDocumentStore((state) => state.content);
 
   function handleProcessInput() {
     let i = 0;
     let j = 0;
-    for (const char of content) {
+    for (const char of input) {
       console.log(pinyin(char, { removeNonZh: true }));
-      const cell = refMap.get(`${i}-${j}`);
-      if (cell?.current) {
-        cell.current.innerText = char;
+      if (char === "\n") {
+        j = 0;
+        i++;
+        continue;
       }
-      j = (j + 1) % columns;
+      j = (j + 1) % columnCount;
       i = j === 0 ? i + 1 : i;
     }
   }
@@ -47,17 +42,21 @@ export function MainGrid() {
           <span>Main Font Size</span>
           <input
             type="number"
-            value={mainFontSize}
-            onChange={(e) => setMainFontSize(Number(e.target.value))}
+            value={mainTextSize}
+            onChange={(e) =>
+              setDocument({ mainTextSize: Number(e.target.value) })
+            }
             className="max-w-12 border pl-2"
           />
         </div>
         <div className="flex gap-2">
-          <span>Secondary Font Size</span>
+          <span>Secondary Text Size</span>
           <input
             type="number"
-            value={secondaryFontSize}
-            onChange={(e) => setSecondaryFontSize(Number(e.target.value))}
+            value={secondaryTextSize}
+            onChange={(e) =>
+              setDocument({ secondaryTextSize: Number(e.target.value) })
+            }
             className="max-w-12 border pl-2"
           />
         </div>
@@ -67,8 +66,10 @@ export function MainGrid() {
           <span>Columns</span>
           <input
             type="number"
-            value={columns}
-            onChange={(e) => setColumns(Number(e.target.value))}
+            value={columnCount}
+            onChange={(e) =>
+              setDocument({ columnCount: Number(e.target.value) })
+            }
             className="max-w-12 border pl-2"
           />
         </div>
@@ -77,7 +78,7 @@ export function MainGrid() {
           <input
             type="number"
             value={columnGap}
-            onChange={(e) => setColumnGap(Number(e.target.value))}
+            onChange={(e) => setDocument({ columnGap: Number(e.target.value) })}
             className="max-w-12 border pl-2"
           />
         </div>
@@ -85,8 +86,8 @@ export function MainGrid() {
           <span>Rows</span>
           <input
             type="number"
-            value={rows}
-            onChange={(e) => setRows(Number(e.target.value))}
+            value={rowCount}
+            onChange={(e) => setDocument({ rowCount: Number(e.target.value) })}
             className="max-w-12 border pl-2"
           />
         </div>
@@ -95,15 +96,15 @@ export function MainGrid() {
           <input
             type="number"
             value={rowGap}
-            onChange={(e) => setRowGap(Number(e.target.value))}
+            onChange={(e) => setDocument({ rowGap: Number(e.target.value) })}
             className="max-w-12 border pl-2"
           />
         </div>
       </div>
       <div className="flex flex-col gap-2">
         <textarea
-          value={content}
-          onChange={(e) => setConent(e.target.value)}
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
           className="h-20 w-full border"
         />
         <button onClick={handleProcessInput}>Generate</button>
@@ -112,49 +113,44 @@ export function MainGrid() {
       <div
         className="container grid"
         style={{
-          gridTemplateRows: `repeat(${rows}, 1fr)`,
+          gridTemplateRows: `repeat(${rowCount}, 1fr)`,
           gap: `${rowGap}px`,
         }}
       >
-        {Array(rows)
-          .fill(0)
-          .map((_, i) => (
-            <div
-              key={i}
-              className="grid"
-              style={{
-                gridTemplateColumns: `repeat(${columns}, 1fr)`,
-                gap: `${columnGap}px`,
-              }}
-            >
-              {Array(columns)
-                .fill(0)
-                .map((_, j) => (
-                  <div id={`${i}-${j}`} key={j} className="flex flex-col">
-                    <div
-                      contentEditable
-                      className="flex h-6 w-8 items-center justify-center border"
-                      style={{
-                        fontSize: `${secondaryFontSize}px`,
-                        width: `${mainFontSize * 2}px`,
-                        height: `${secondaryFontSize * 2}px`,
-                      }}
-                    ></div>
+        {content.map((rows, i) => (
+          <div
+            key={i}
+            className="grid"
+            style={{
+              gridTemplateColumns: `repeat(${columnCount}, 1fr)`,
+              gap: `${columnGap}px`,
+            }}
+          >
+            {rows.map((_, j) => (
+              <div id={`${i}-${j}`} key={j} className="flex flex-col">
+                <div
+                  contentEditable
+                  className="flex h-6 w-8 items-center justify-center border"
+                  style={{
+                    fontSize: `${secondaryTextSize}px`,
+                    width: `${mainTextSize * 2}px`,
+                    height: `${secondaryTextSize * 2}px`,
+                  }}
+                ></div>
 
-                    <div
-                      ref={refMap.get(`${i}-${j}`)}
-                      contentEditable
-                      className="flex items-center justify-center border"
-                      style={{
-                        fontSize: `${mainFontSize}px`,
-                        width: `${mainFontSize * 2}px`,
-                        height: `${mainFontSize * 2}px`,
-                      }}
-                    ></div>
-                  </div>
-                ))}
-            </div>
-          ))}
+                <div
+                  contentEditable
+                  className="flex items-center justify-center border"
+                  style={{
+                    fontSize: `${mainTextSize}px`,
+                    width: `${mainTextSize * 2}px`,
+                    height: `${mainTextSize * 2}px`,
+                  }}
+                ></div>
+              </div>
+            ))}
+          </div>
+        ))}
       </div>
     </div>
   );
