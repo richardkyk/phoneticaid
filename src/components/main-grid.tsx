@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { pinyin } from "pinyin-pro";
+import { createRef, useMemo, useState } from "react";
 
 export function MainGrid() {
   const [mainFontSize, setMainFontSize] = useState(16);
@@ -11,6 +12,33 @@ export function MainGrid() {
 
   const [columnGap, setColumnGap] = useState(10);
   const [rowGap, setRowGap] = useState(20);
+
+  const [content, setConent] = useState("");
+
+  const refMap = useMemo(() => {
+    const refMap = new Map<string, React.RefObject<HTMLDivElement>>();
+    for (let i = 0; i < rows; i++) {
+      for (let j = 0; j < columns; j++) {
+        const id = `${i}-${j}`;
+        refMap.set(id, createRef());
+      }
+    }
+    return refMap;
+  }, [columns, rows]);
+
+  function handleProcessInput() {
+    let i = 0;
+    let j = 0;
+    for (const char of content) {
+      console.log(pinyin(char, { removeNonZh: true }));
+      const cell = refMap.get(`${i}-${j}`);
+      if (cell?.current) {
+        cell.current.innerText = char;
+      }
+      j = (j + 1) % columns;
+      i = j === 0 ? i + 1 : i;
+    }
+  }
 
   return (
     <div className="flex flex-col gap-4">
@@ -72,6 +100,14 @@ export function MainGrid() {
           />
         </div>
       </div>
+      <div className="flex flex-col gap-2">
+        <textarea
+          value={content}
+          onChange={(e) => setConent(e.target.value)}
+          className="h-20 w-full border"
+        />
+        <button onClick={handleProcessInput}>Generate</button>
+      </div>
 
       <div
         className="container grid"
@@ -106,6 +142,7 @@ export function MainGrid() {
                     ></div>
 
                     <div
+                      ref={refMap.get(`${i}-${j}`)}
                       contentEditable
                       className="flex items-center justify-center border"
                       style={{

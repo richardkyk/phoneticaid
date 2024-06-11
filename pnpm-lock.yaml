@@ -14,6 +14,9 @@ dependencies:
   next:
     specifier: ^14.2.1
     version: 14.2.3(react-dom@18.3.1)(react@18.3.1)
+  pinyin-pro:
+    specifier: ^3.22.0
+    version: 3.22.0
   react:
     specifier: ^18.3.0
     version: 18.3.1
@@ -1017,6 +1020,7 @@ packages:
 
   /emoji-regex@8.0.0:
     resolution: {integrity: sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A==}
+    requiresBuild: true
     dev: true
 
   /emoji-regex@9.2.2:
@@ -1842,6 +1846,7 @@ packages:
   /is-fullwidth-code-point@3.0.0:
     resolution: {integrity: sha512-zymm5+u+sCsSWyD9qNaejV3DFvhCKclKdizYaJUuHA83RLjb7nSuGnddCHGv0hk+KY7BMAlsWeK4Ueg6EV6XQg==}
     engines: {node: '>=8'}
+    requiresBuild: true
     dev: true
 
   /is-generator-function@1.0.10:
@@ -2358,6 +2363,10 @@ packages:
     resolution: {integrity: sha512-udgsAY+fTnvv7kI7aaxbqwWNb0AHiB0qBO89PZKPkoTmGOgdbrHDKD+0B2X4uTfJ/FT1R09r9gTsjUjNJotuog==}
     engines: {node: '>=0.10.0'}
     dev: true
+
+  /pinyin-pro@3.22.0:
+    resolution: {integrity: sha512-fz1rvX72K/OmUp3Bbj8/jzRt0aSetmmx/Su4My1H/nUu5x2udnp0Qiq+ojxDXk1CojXBgSUcjXyMI3XNhwSoLg==}
+    dev: false
 
   /pirates@4.0.6:
     resolution: {integrity: sha512-saLsH7WeYYPiD25LDuLRRY/i+6HaPYr6G1OUlN39otzkSTxKnubR9RTxS3/Kk50s1g2JTgFwWQDQyplC5/SHZg==}
