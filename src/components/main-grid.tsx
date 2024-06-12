@@ -158,11 +158,10 @@ export function MainGrid() {
                     <div
                       contentEditable
                       suppressContentEditableWarning
-                      className="absolute flex h-6 w-8 items-center justify-center border-x border-t print:border-transparent"
+                      className="absolute flex w-full items-center justify-center border-x border-t border-gray-100 hover:border-gray-500 print:border-transparent"
                       style={{
                         fontSize: `${secondaryTextSize}px`,
-                        width: `${mainTextSize * 2}px`,
-                        height: `${secondaryTextSize * 2}px`,
+                        height: `${secondaryTextSize}px`,
                         top: `${offset}px`,
                       }}
                     >
@@ -172,11 +171,10 @@ export function MainGrid() {
                     <div
                       contentEditable
                       suppressContentEditableWarning
-                      className={`flex items-center justify-center border-x border-b print:border-transparent ${font.className}`}
+                      className={`flex items-center justify-center border-x border-b border-gray-100 hover:border-gray-500 print:border-transparent ${font.className}`}
                       style={{
                         fontSize: `${mainTextSize}px`,
-                        width: `${mainTextSize * 2}px`,
-                        height: `${mainTextSize * 2}px`,
+                        height: `${mainTextSize}px`,
                       }}
                     >
                       {content.get(`${i}:${j}`)?.value}
