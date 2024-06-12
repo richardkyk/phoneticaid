@@ -31,7 +31,7 @@ export function generateGrid(input: string) {
     const isLastChar = (index + 1) % columnCount === 0;
     const value = {
       value: char,
-      pinyin: pinyin(char, { removeNonZh: true }),
+      pinyin: char === "" ? "mǔ" : pinyin(char, { removeNonZh: true }),
     };
     nextContent[row]![col] = value;
     col = (col + 1) % columnCount;

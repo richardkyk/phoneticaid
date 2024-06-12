@@ -1,8 +1,12 @@
 "use client";
 
+import localFont from "next/font/local";
 import { useEffect, useRef } from "react";
 import { useDocumentStore } from "~/lib/store";
 import { generateGrid } from "~/lib/utils";
+
+// Font files can be colocated inside of `pages`
+const font = localFont({ src: "../fonts/KaiTi2.ttf" });
 
 export function MainGrid() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -110,6 +114,15 @@ export function MainGrid() {
             />
           </div>
         </div>
+        <div className={font.className}>
+          <button
+            onClick={async () => {
+              await navigator.clipboard.writeText("");
+            }}
+          >
+            
+          </button>
+        </div>
         <div className="flex flex-col gap-2">
           <textarea ref={inputRef} className="h-20 w-full border" />
           <button onClick={handleProcessInput}>Generate</button>
@@ -151,7 +164,7 @@ export function MainGrid() {
                 <div
                   contentEditable
                   suppressContentEditableWarning
-                  className="flex items-center justify-center border-x border-b print:border-transparent"
+                  className={`flex items-center justify-center border-x border-b print:border-transparent ${font.className}`}
                   style={{
                     fontSize: `${mainTextSize}px`,
                     width: `${mainTextSize * 2}px`,
