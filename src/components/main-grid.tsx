@@ -2,6 +2,7 @@
 
 import localFont from "next/font/local";
 import { useEffect, useRef } from "react";
+import { symbols } from "~/lib/constants";
 import { useDocumentStore } from "~/lib/store";
 import { generateGrid } from "~/lib/utils";
 
@@ -115,13 +116,16 @@ export function MainGrid() {
           </div>
         </div>
         <div className={font.className}>
-          <button
-            onClick={async () => {
-              await navigator.clipboard.writeText("");
-            }}
-          >
-            
-          </button>
+          {symbols.map((symbol) => (
+            <button
+              key={symbol}
+              onClick={async () => {
+                await navigator.clipboard.writeText(symbol);
+              }}
+            >
+              {symbol}
+            </button>
+          ))}
         </div>
         <div className="flex flex-col gap-2">
           <textarea ref={inputRef} className="h-20 w-full border px-2 py-1" />

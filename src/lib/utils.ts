@@ -5,6 +5,7 @@ export function generateGrid(input: string) {
   const columnCount = useDocumentStore.getState().config.columnCount;
   const rowCount = useDocumentStore.getState().config.rowCount;
   const setContent = useDocumentStore.getState().setContent;
+  const setDocument = useDocumentStore.getState().setDocument;
 
   const resetMap = new Map<string, boolean>();
   for (let i = 0; i < rowCount; i++) {
@@ -19,6 +20,7 @@ export function generateGrid(input: string) {
   let index = 0;
   let prevStep = "";
   for (const char of input) {
+    if (row === rowCount) setDocument({ rowCount: rowCount + 1 });
     if (char === "\n") {
       col = 0;
       if (prevStep !== "last-char") row++;
