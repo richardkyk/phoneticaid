@@ -136,7 +136,7 @@ export function MainGrid() {
       <div
         className="container grid"
         style={{
-          gridTemplateRows: `repeat(${rowCount}, 1fr)`,
+          gridTemplateRows: `repeat(${rowCount}, ${mainTextSize}px)`,
           gap: `${rowGap}px`,
         }}
       >
@@ -147,7 +147,7 @@ export function MainGrid() {
               key={i}
               className="grid"
               style={{
-                gridTemplateColumns: `repeat(${columnCount}, 1fr)`,
+                gridTemplateColumns: `repeat(${columnCount}, ${mainTextSize}px)`,
                 gap: `${columnGap}px`,
               }}
             >

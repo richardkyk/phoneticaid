@@ -1,5 +1,5 @@
 import { pinyin } from "pinyin-pro";
-import { useDocumentStore } from "./store";
+import { useDocumentStore, type CellState } from "./store";
 
 export function generateGrid(input: string) {
   const columnCount = useDocumentStore.getState().config.columnCount;
@@ -7,13 +7,7 @@ export function generateGrid(input: string) {
   const setContent = useDocumentStore.getState().setContent;
   const setDocument = useDocumentStore.getState().setDocument;
 
-  const resetMap = new Map<string, boolean>();
-  for (let i = 0; i < rowCount; i++) {
-    for (let j = 0; j < columnCount; j++) {
-      const key = `${i}:${j}`;
-      resetMap.set(key, true);
-    }
-  }
+  const nextMap = new Map<string, CellState>();
 
   let row = 0;
   let col = 0;
@@ -32,8 +26,7 @@ export function generateGrid(input: string) {
       pinyin: char === "" ? "mǔ" : pinyin(char, { removeNonZh: true }),
     };
     const key = `${row}:${col}`;
-    setContent(key, value);
-    resetMap.delete(key);
+    nextMap.set(key, value);
     col = (col + 1) % columnCount;
     const isLastChar = (index + 1) % columnCount === 0;
     if (isLastChar) {
@@ -45,8 +38,5 @@ export function generateGrid(input: string) {
     index++;
   }
 
-  // reset the rest of the map
-  for (const [key] of resetMap) {
-    setContent(key, { value: "", pinyin: "" });
-  }
+  setContent(nextMap);
 }

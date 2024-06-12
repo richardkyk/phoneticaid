@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-interface CellState {
+export interface CellState {
   value: string;
   pinyin: string;
 }
@@ -16,28 +16,33 @@ interface DocumentState {
   };
   content: Map<string, CellState>;
   setDocument: (config: Partial<DocumentState["config"]>) => void;
-  setContent: (key: string, value: CellState) => void;
+  setCell: (key: string, value: CellState) => void;
+  setContent: (value: Map<string, CellState>) => void;
 }
 
 export const useDocumentStore = create<DocumentState>()((set) => ({
   config: {
     rowCount: 10,
-    rowGap: 20,
+    rowGap: 12,
     columnCount: 16,
-    columnGap: 10,
-    mainTextSize: 16,
+    columnGap: 6,
+    mainTextSize: 30,
     secondaryTextSize: 10,
     offset: -10,
   },
   content: new Map(),
   setDocument: (config) =>
-    set((state) => {
-      const next = { ...state.config, ...config };
-      return { config: next };
-    }),
-  setContent: (key: string, value: CellState) => {
-    set((prev) => ({
-      content: new Map(prev.content).set(key, value),
+    set((state) => ({
+      config: { ...state.config, ...config },
+    })),
+  setCell: (key: string, value: CellState) => {
+    set((state) => ({
+      content: new Map(state.content).set(key, value),
     }));
+  },
+  setContent: (value) => {
+    set({
+      content: value,
+    });
   },
 }));
