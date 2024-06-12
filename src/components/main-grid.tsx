@@ -15,6 +15,7 @@ export function MainGrid() {
   const rowCount = useDocumentStore((state) => state.config.rowCount);
   const columnGap = useDocumentStore((state) => state.config.columnGap);
   const rowGap = useDocumentStore((state) => state.config.rowGap);
+  const offset = useDocumentStore((state) => state.config.offset);
 
   const setDocument = useDocumentStore((state) => state.setDocument);
 
@@ -31,73 +32,88 @@ export function MainGrid() {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex gap-4">
-        <div className="flex gap-2">
-          <span>Main Font Size</span>
-          <input
-            type="number"
-            value={mainTextSize}
-            onChange={(e) =>
-              setDocument({ mainTextSize: Number(e.target.value) })
-            }
-            className="max-w-12 border pl-2"
-          />
+      <div className="flex flex-col gap-4 print:hidden">
+        <div className="flex gap-4">
+          <div className="flex gap-2">
+            <span>Main Font Size</span>
+            <input
+              type="number"
+              value={mainTextSize}
+              onChange={(e) =>
+                setDocument({ mainTextSize: Number(e.target.value) })
+              }
+              className="max-w-12 border pl-2"
+            />
+          </div>
+          <div className="flex gap-2">
+            <span>Secondary Text Size</span>
+            <input
+              type="number"
+              value={secondaryTextSize}
+              onChange={(e) =>
+                setDocument({ secondaryTextSize: Number(e.target.value) })
+              }
+              className="max-w-12 border pl-2"
+            />
+          </div>
+          <div className="flex gap-2">
+            <span>Pinyin Offset</span>
+            <input
+              type="number"
+              value={offset}
+              onChange={(e) => setDocument({ offset: Number(e.target.value) })}
+              className="max-w-12 border pl-2"
+            />
+          </div>
         </div>
-        <div className="flex gap-2">
-          <span>Secondary Text Size</span>
-          <input
-            type="number"
-            value={secondaryTextSize}
-            onChange={(e) =>
-              setDocument({ secondaryTextSize: Number(e.target.value) })
-            }
-            className="max-w-12 border pl-2"
-          />
+        <div className="flex gap-4">
+          <div className="flex gap-2">
+            <span>Columns</span>
+            <input
+              type="number"
+              value={columnCount}
+              onChange={(e) =>
+                setDocument({ columnCount: Number(e.target.value) })
+              }
+              className="max-w-12 border pl-2"
+            />
+          </div>
+          <div className="flex gap-2">
+            <span>Column Gap</span>
+            <input
+              type="number"
+              value={columnGap}
+              onChange={(e) =>
+                setDocument({ columnGap: Number(e.target.value) })
+              }
+              className="max-w-12 border pl-2"
+            />
+          </div>
+          <div className="flex gap-2">
+            <span>Rows</span>
+            <input
+              type="number"
+              value={rowCount}
+              onChange={(e) =>
+                setDocument({ rowCount: Number(e.target.value) })
+              }
+              className="max-w-12 border pl-2"
+            />
+          </div>
+          <div className="flex gap-2">
+            <span>Row Gap</span>
+            <input
+              type="number"
+              value={rowGap}
+              onChange={(e) => setDocument({ rowGap: Number(e.target.value) })}
+              className="max-w-12 border pl-2"
+            />
+          </div>
         </div>
-      </div>
-      <div className="flex gap-4">
-        <div className="flex gap-2">
-          <span>Columns</span>
-          <input
-            type="number"
-            value={columnCount}
-            onChange={(e) =>
-              setDocument({ columnCount: Number(e.target.value) })
-            }
-            className="max-w-12 border pl-2"
-          />
+        <div className="flex flex-col gap-2">
+          <textarea ref={inputRef} className="h-20 w-full border" />
+          <button onClick={handleProcessInput}>Generate</button>
         </div>
-        <div className="flex gap-2">
-          <span>Column Gap</span>
-          <input
-            type="number"
-            value={columnGap}
-            onChange={(e) => setDocument({ columnGap: Number(e.target.value) })}
-            className="max-w-12 border pl-2"
-          />
-        </div>
-        <div className="flex gap-2">
-          <span>Rows</span>
-          <input
-            type="number"
-            value={rowCount}
-            onChange={(e) => setDocument({ rowCount: Number(e.target.value) })}
-            className="max-w-12 border pl-2"
-          />
-        </div>
-        <div className="flex gap-2">
-          <span>Row Gap</span>
-          <input
-            type="number"
-            value={rowGap}
-            onChange={(e) => setDocument({ rowGap: Number(e.target.value) })}
-            className="max-w-12 border pl-2"
-          />
-        </div>
-      </div>
-      <div className="flex flex-col gap-2">
-        <textarea ref={inputRef} className="h-20 w-full border" />
-        <button onClick={handleProcessInput}>Generate</button>
       </div>
 
       <div
@@ -117,14 +133,16 @@ export function MainGrid() {
             }}
           >
             {rows.map((cell, j) => (
-              <div id={`${i}-${j}`} key={j} className="flex flex-col">
+              <div id={`${i}-${j}`} key={j} className="relative flex flex-col">
                 <div
                   contentEditable
-                  className="flex h-6 w-8 items-center justify-center border"
+                  suppressContentEditableWarning
+                  className="absolute flex h-6 w-8 items-center justify-center border-x border-t print:border-transparent"
                   style={{
                     fontSize: `${secondaryTextSize}px`,
                     width: `${mainTextSize * 2}px`,
                     height: `${secondaryTextSize * 2}px`,
+                    top: `${offset}px`,
                   }}
                 >
                   {cell.pinyin}
@@ -132,7 +150,8 @@ export function MainGrid() {
 
                 <div
                   contentEditable
-                  className="flex items-center justify-center border"
+                  suppressContentEditableWarning
+                  className="flex items-center justify-center border-x border-b print:border-transparent"
                   style={{
                     fontSize: `${mainTextSize}px`,
                     width: `${mainTextSize * 2}px`,

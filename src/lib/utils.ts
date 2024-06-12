@@ -5,20 +5,17 @@ export function generateGrid(input: string) {
   const columnCount = useDocumentStore.getState().config.columnCount;
   const rowCount = useDocumentStore.getState().config.rowCount;
 
-  const setDocument = useDocumentStore.getState().setDocument;
   const setContent = useDocumentStore.getState().setContent;
+  const setDocument = useDocumentStore.getState().setDocument;
 
-  const nextContent = [];
   // generate new grid
-  for (let i = 0; i < rowCount; i++) {
-    const nextRow = [];
-    for (let j = 0; j < columnCount; j++) {
-      nextRow.push({ value: "", pinyin: "" });
-    }
-    nextContent.push(nextRow);
-  }
-
-  if (nextContent.length === 0 || nextContent[0]?.length === 0) return;
+  const nextContent = Array(rowCount)
+    .fill(0)
+    .map(() =>
+      Array(columnCount)
+        .fill(0)
+        .map(() => ({ value: "", pinyin: "" })),
+    );
 
   // fill in new grid
   let row = 0;
@@ -28,7 +25,7 @@ export function generateGrid(input: string) {
   for (const char of input) {
     if (char === "\n" && prevStep !== "last-char") {
       col = 0;
-      row = (row + 1) % rowCount;
+      row++;
       continue;
     }
     const isLastChar = (index + 1) % columnCount === 0;
@@ -38,9 +35,16 @@ export function generateGrid(input: string) {
     };
     nextContent[row]![col] = value;
     col = (col + 1) % columnCount;
-    if (isLastChar) row = (row + 1) % rowCount;
+    if (isLastChar) row++;
     index++;
     prevStep = isLastChar ? "last-char" : "";
+    if (row === rowCount) {
+      const newRow = Array(columnCount)
+        .fill(0)
+        .map(() => ({ value: "", pinyin: "" }));
+      nextContent.push(newRow);
+      setDocument({ rowCount: rowCount + 1 });
+    }
   }
   setContent(nextContent);
 }

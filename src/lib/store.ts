@@ -12,6 +12,7 @@ interface DocumentState {
     columnGap: number;
     mainTextSize: number;
     secondaryTextSize: number;
+    offset: number;
   };
   content: CellState[][];
   setDocument: (config: Partial<DocumentState["config"]>) => void;
@@ -26,6 +27,7 @@ export const useDocumentStore = create<DocumentState>()((set) => ({
     columnGap: 10,
     mainTextSize: 16,
     secondaryTextSize: 10,
+    offset: -10,
   },
   content: Array(10)
     .fill(0)
