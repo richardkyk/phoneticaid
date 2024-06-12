@@ -23,21 +23,28 @@ export function generateGrid(input: string) {
   let index = 0;
   let prevStep = "";
   for (const char of input) {
-    if (char === "\n" && prevStep !== "last-char") {
+    if (char === "\n") {
       col = 0;
-      row++;
+      if (prevStep !== "last-char") row++;
+      index = 0;
       continue;
     }
-    const isLastChar = (index + 1) % columnCount === 0;
     const value = {
       value: char,
       pinyin: char === "" ? "mǔ" : pinyin(char, { removeNonZh: true }),
     };
     nextContent[row]![col] = value;
     col = (col + 1) % columnCount;
-    if (isLastChar) row++;
-    index++;
+    const isLastChar = (index + 1) % columnCount === 0;
+    if (isLastChar) {
+      row++;
+      index = 0;
+    }
+
     prevStep = isLastChar ? "last-char" : "";
+    index++;
+
+    // append a new row
     if (row === rowCount) {
       const newRow = Array(columnCount)
         .fill(0)

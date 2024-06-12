@@ -124,7 +124,7 @@ export function MainGrid() {
           </button>
         </div>
         <div className="flex flex-col gap-2">
-          <textarea ref={inputRef} className="h-20 w-full border" />
+          <textarea ref={inputRef} className="h-20 w-full border px-2 py-1" />
           <button onClick={handleProcessInput}>Generate</button>
         </div>
       </div>
