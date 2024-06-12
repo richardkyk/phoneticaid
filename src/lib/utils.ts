@@ -4,20 +4,16 @@ import { useDocumentStore } from "./store";
 export function generateGrid(input: string) {
   const columnCount = useDocumentStore.getState().config.columnCount;
   const rowCount = useDocumentStore.getState().config.rowCount;
-
   const setContent = useDocumentStore.getState().setContent;
-  const setDocument = useDocumentStore.getState().setDocument;
 
-  // generate new grid
-  const nextContent = Array(rowCount)
-    .fill(0)
-    .map(() =>
-      Array(columnCount)
-        .fill(0)
-        .map(() => ({ value: "", pinyin: "" })),
-    );
+  const resetMap = new Map<string, boolean>();
+  for (let i = 0; i < rowCount; i++) {
+    for (let j = 0; j < columnCount; j++) {
+      const key = `${i}:${j}`;
+      resetMap.set(key, true);
+    }
+  }
 
-  // fill in new grid
   let row = 0;
   let col = 0;
   let index = 0;
@@ -33,7 +29,9 @@ export function generateGrid(input: string) {
       value: char,
       pinyin: char === "" ? "mǔ" : pinyin(char, { removeNonZh: true }),
     };
-    nextContent[row]![col] = value;
+    const key = `${row}:${col}`;
+    setContent(key, value);
+    resetMap.delete(key);
     col = (col + 1) % columnCount;
     const isLastChar = (index + 1) % columnCount === 0;
     if (isLastChar) {
@@ -43,15 +41,10 @@ export function generateGrid(input: string) {
 
     prevStep = isLastChar ? "last-char" : "";
     index++;
-
-    // append a new row
-    if (row === rowCount) {
-      const newRow = Array(columnCount)
-        .fill(0)
-        .map(() => ({ value: "", pinyin: "" }));
-      nextContent.push(newRow);
-      setDocument({ rowCount: rowCount + 1 });
-    }
   }
-  setContent(nextContent);
+
+  // reset the rest of the map
+  for (const [key] of resetMap) {
+    setContent(key, { value: "", pinyin: "" });
+  }
 }

@@ -14,9 +14,9 @@ interface DocumentState {
     secondaryTextSize: number;
     offset: number;
   };
-  content: CellState[][];
+  content: Map<string, CellState>;
   setDocument: (config: Partial<DocumentState["config"]>) => void;
-  setContent: (content: CellState[][]) => void;
+  setContent: (key: string, value: CellState) => void;
 }
 
 export const useDocumentStore = create<DocumentState>()((set) => ({
@@ -29,23 +29,15 @@ export const useDocumentStore = create<DocumentState>()((set) => ({
     secondaryTextSize: 10,
     offset: -10,
   },
-  content: Array(10)
-    .fill(0)
-    .map(() =>
-      Array(16)
-        .fill(0)
-        .map(() => {
-          return { value: "", pinyin: "" };
-        }),
-    ),
+  content: new Map(),
   setDocument: (config) =>
     set((state) => {
       const next = { ...state.config, ...config };
       return { config: next };
     }),
-  setContent: (content) => {
-    set({
-      content,
-    });
+  setContent: (key: string, value: CellState) => {
+    set((prev) => ({
+      content: new Map(prev.content).set(key, value),
+    }));
   },
 }));
