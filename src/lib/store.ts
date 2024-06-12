@@ -17,7 +17,7 @@ interface DocumentState {
   content: Map<string, CellState>;
   setDocument: (config: Partial<DocumentState["config"]>) => void;
   setCell: (key: string, value: CellState) => void;
-  setContent: (value: Map<string, CellState>) => void;
+  setContent: (content: Map<string, CellState>) => void;
 }
 
 export const useDocumentStore = create<DocumentState>()((set) => ({
@@ -32,17 +32,8 @@ export const useDocumentStore = create<DocumentState>()((set) => ({
   },
   content: new Map(),
   setDocument: (config) =>
-    set((state) => ({
-      config: { ...state.config, ...config },
-    })),
-  setCell: (key: string, value: CellState) => {
-    set((state) => ({
-      content: new Map(state.content).set(key, value),
-    }));
-  },
-  setContent: (value) => {
-    set({
-      content: value,
-    });
-  },
+    set((state) => ({ config: { ...state.config, ...config } })),
+  setCell: (key: string, value: CellState) =>
+    set((state) => ({ content: new Map(state.content).set(key, value) })),
+  setContent: (content) => set({ content }),
 }));

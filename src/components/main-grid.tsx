@@ -1,17 +1,13 @@
 "use client";
 
 import localFont from "next/font/local";
-import { useEffect, useRef } from "react";
-import { symbols } from "~/lib/constants";
 import { useDocumentStore } from "~/lib/store";
-import { generateGrid } from "~/lib/utils";
+import ToolBar from "./tool-bar";
 
 // Font files can be colocated inside of `pages`
 const font = localFont({ src: "../fonts/KaiTi2.ttf" });
 
 export function MainGrid() {
-  const inputRef = useRef<HTMLTextAreaElement>(null);
-
   const mainTextSize = useDocumentStore((state) => state.config.mainTextSize);
   const secondaryTextSize = useDocumentStore(
     (state) => state.config.secondaryTextSize,
@@ -22,119 +18,15 @@ export function MainGrid() {
   const rowGap = useDocumentStore((state) => state.config.rowGap);
   const offset = useDocumentStore((state) => state.config.offset);
 
-  const setDocument = useDocumentStore((state) => state.setDocument);
-
   const content = useDocumentStore((state) => state.content);
 
-  function handleProcessInput() {
-    generateGrid(inputRef.current?.value ?? "");
-  }
-
-  useEffect(() => {
-    generateGrid(inputRef.current?.value ?? "");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rowCount, columnCount]);
-
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex flex-col gap-4 print:hidden">
-        <div className="flex gap-4">
-          <div className="flex gap-2">
-            <span>Main Font Size</span>
-            <input
-              type="number"
-              value={mainTextSize}
-              onChange={(e) =>
-                setDocument({ mainTextSize: Number(e.target.value) })
-              }
-              className="max-w-12 border pl-2"
-            />
-          </div>
-          <div className="flex gap-2">
-            <span>Secondary Text Size</span>
-            <input
-              type="number"
-              value={secondaryTextSize}
-              onChange={(e) =>
-                setDocument({ secondaryTextSize: Number(e.target.value) })
-              }
-              className="max-w-12 border pl-2"
-            />
-          </div>
-          <div className="flex gap-2">
-            <span>Pinyin Offset</span>
-            <input
-              type="number"
-              value={offset}
-              onChange={(e) => setDocument({ offset: Number(e.target.value) })}
-              className="max-w-12 border pl-2"
-            />
-          </div>
-        </div>
-        <div className="flex gap-4">
-          <div className="flex gap-2">
-            <span>Columns</span>
-            <input
-              type="number"
-              value={columnCount}
-              onChange={(e) =>
-                setDocument({ columnCount: Number(e.target.value) })
-              }
-              className="max-w-12 border pl-2"
-            />
-          </div>
-          <div className="flex gap-2">
-            <span>Column Gap</span>
-            <input
-              type="number"
-              value={columnGap}
-              onChange={(e) =>
-                setDocument({ columnGap: Number(e.target.value) })
-              }
-              className="max-w-12 border pl-2"
-            />
-          </div>
-          <div className="flex gap-2">
-            <span>Rows</span>
-            <input
-              type="number"
-              value={rowCount}
-              onChange={(e) =>
-                setDocument({ rowCount: Number(e.target.value) })
-              }
-              className="max-w-12 border pl-2"
-            />
-          </div>
-          <div className="flex gap-2">
-            <span>Row Gap</span>
-            <input
-              type="number"
-              value={rowGap}
-              onChange={(e) => setDocument({ rowGap: Number(e.target.value) })}
-              className="max-w-12 border pl-2"
-            />
-          </div>
-        </div>
-        <div className={font.className}>
-          {symbols.map((symbol) => (
-            <button
-              key={symbol}
-              onClick={async () => {
-                await navigator.clipboard.writeText(symbol);
-              }}
-            >
-              {symbol}
-            </button>
-          ))}
-        </div>
-        <div className="flex flex-col gap-2">
-          <textarea ref={inputRef} className="h-20 w-full border px-2 py-1" />
-          <button onClick={handleProcessInput}>Generate</button>
-        </div>
+    <div className="flex w-full max-w-screen-md flex-col gap-8">
+      <div className="w-full">
+        <ToolBar />
       </div>
-
       <div
-        className="container grid"
+        className="border-border container grid overflow-auto rounded-md border px-4 py-8"
         style={{
           gridTemplateRows: `repeat(${rowCount}, ${mainTextSize}px)`,
           gap: `${rowGap}px`,
@@ -162,7 +54,7 @@ export function MainGrid() {
                     <div
                       contentEditable
                       suppressContentEditableWarning
-                      className="absolute flex w-full items-center justify-center border-x border-t border-gray-100 hover:border-gray-500 print:border-transparent"
+                      className="absolute flex w-full items-center justify-center border-x border-t border-gray-100 font-sans  hover:border-b hover:border-gray-500 print:border-transparent"
                       style={{
                         fontSize: `${secondaryTextSize}px`,
                         height: `${secondaryTextSize}px`,
@@ -175,7 +67,7 @@ export function MainGrid() {
                     <div
                       contentEditable
                       suppressContentEditableWarning
-                      className={`flex items-center justify-center border-x border-b border-gray-100 hover:border-gray-500 print:border-transparent ${font.className}`}
+                      className={`flex items-center justify-center border-x border-b border-gray-100 hover:border-t hover:border-gray-500 print:border-transparent ${font.className}`}
                       style={{
                         fontSize: `${mainTextSize}px`,
                         height: `${mainTextSize}px`,

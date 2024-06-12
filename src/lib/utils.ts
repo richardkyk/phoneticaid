@@ -1,5 +1,11 @@
+import { clsx, type ClassValue } from "clsx";
 import { pinyin } from "pinyin-pro";
+import { twMerge } from "tailwind-merge";
 import { useDocumentStore, type CellState } from "./store";
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
 
 export function generateGrid(input: string) {
   const columnCount = useDocumentStore.getState().config.columnCount;
@@ -38,5 +44,6 @@ export function generateGrid(input: string) {
     index++;
   }
 
+  setDocument({ rowCount: row + 1 });
   setContent(nextMap);
 }
