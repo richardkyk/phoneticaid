@@ -1,8 +1,10 @@
+import { PDFDownloadLink } from "@react-pdf/renderer";
 import localFont from "next/font/local";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { symbols } from "~/lib/constants";
 import { useDocumentStore } from "~/lib/store";
 import { generateGrid } from "~/lib/utils";
+import PrintableArea from "./printable-area";
 import { Button } from "./ui/button";
 import { Label } from "./ui/label";
 import { Slider } from "./ui/slider";
@@ -11,6 +13,7 @@ import { Textarea } from "./ui/textarea";
 const font = localFont({ src: "../fonts/KaiTi2.ttf" });
 
 export default function ToolBar() {
+  const [isClient, setIsClient] = useState(false);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   const mainTextSize = useDocumentStore((state) => state.config.mainTextSize);
@@ -29,6 +32,7 @@ export default function ToolBar() {
   }
 
   useEffect(() => {
+    setIsClient(true);
     generateGrid(inputRef.current?.value ?? "");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rowCount, columnCount]);
@@ -109,6 +113,16 @@ export default function ToolBar() {
         </div>
         <Button className="w-full" onClick={handleProcessInput}>
           Generate
+        </Button>
+        <Button variant="secondary">
+          {isClient && (
+            <PDFDownloadLink
+              document={<PrintableArea />}
+              fileName="somename.pdf"
+            >
+              {({ loading }) => (loading ? "Loading..." : "Download")}
+            </PDFDownloadLink>
+          )}
         </Button>
       </div>
     </div>

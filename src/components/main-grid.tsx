@@ -26,9 +26,8 @@ export function MainGrid() {
         <ToolBar />
       </div>
       <div
-        className="border-border container grid overflow-auto rounded-md border px-4 py-8"
+        className="border-border container flex flex-col overflow-auto rounded-md border px-4 py-8"
         style={{
-          gridTemplateRows: `repeat(${rowCount}, ${mainTextSize}px)`,
           gap: `${rowGap}px`,
         }}
       >
@@ -37,9 +36,8 @@ export function MainGrid() {
           .map((_, i) => (
             <div
               key={i}
-              className="grid"
+              className="flex"
               style={{
-                gridTemplateColumns: `repeat(${columnCount}, ${mainTextSize}px)`,
                 gap: `${columnGap}px`,
               }}
             >
@@ -71,6 +69,7 @@ export function MainGrid() {
                       style={{
                         fontSize: `${mainTextSize}px`,
                         height: `${mainTextSize}px`,
+                        width: `${mainTextSize}px`,
                       }}
                     >
                       {content.get(`${i}:${j}`)?.value}
