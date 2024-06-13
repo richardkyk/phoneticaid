@@ -29,7 +29,7 @@ export function MainGrid() {
         <ToolBar />
       </div>
       <div
-        className="border-border container flex flex-col overflow-auto py-8 print:border-transparent print:py-0"
+        className="mx-auto flex flex-col overflow-auto"
         style={{
           gap: `${rowGap}px`,
         }}

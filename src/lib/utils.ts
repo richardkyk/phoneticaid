@@ -48,11 +48,10 @@ export function generateGrid(input: string) {
   setContent(nextMap);
 }
 
-export function px2cm(px: number) {
+export function px2mm(px: number) {
   const n = 0;
-  const cpi = 2.54; // centimeters per inch
+  const mmpi = 25.4; // millimeters per inch
   const dpi = 96; // dots per inch
   const ppd = window.devicePixelRatio; // pixels per dot
-  console.log(ppd);
-  return ((px * cpi) / (dpi * ppd)).toFixed(n);
+  return ((px * mmpi) / (dpi * ppd)).toFixed(n);
 }
