@@ -10,7 +10,6 @@ import ToolBar from "./tool-bar";
 const font = localFont({ src: "../fonts/KaiTi2.ttf" });
 
 export function MainGrid() {
-  const marginTop = 32;
   const mainTextSize = useDocumentStore((state) => state.config.mainTextSize);
   const secondaryTextSize = useDocumentStore(
     (state) => state.config.secondaryTextSize,
@@ -29,7 +28,7 @@ export function MainGrid() {
         <ToolBar />
       </div>
       <div
-        className="mx-auto flex flex-col overflow-auto"
+        className="flex w-[210mm] min-w-0 flex-col print:w-[210mm]"
         style={{
           gap: `${rowGap}px`,
         }}
@@ -60,7 +59,6 @@ export function MainGrid() {
                           style={{
                             fontSize: `${secondaryTextSize}px`,
                             height: `${secondaryTextSize}px`,
-                            top: `${offset}px`,
                           }}
                         >
                           {content.get(`${i}:${j}`)?.pinyin}
@@ -74,6 +72,7 @@ export function MainGrid() {
                             fontSize: `${mainTextSize}px`,
                             height: `${mainTextSize}px`,
                             width: `${mainTextSize}px`,
+                            marginTop: `${secondaryTextSize + offset}px`,
                           }}
                         >
                           {content.get(`${i}:${j}`)?.value}

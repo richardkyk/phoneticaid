@@ -13,6 +13,8 @@ interface DocumentState {
     mainTextSize: number;
     secondaryTextSize: number;
     offset: number;
+    marginX: number;
+    marginY: number;
   };
   content: Map<string, CellState>;
   setDocument: (config: Partial<DocumentState["config"]>) => void;
@@ -29,6 +31,8 @@ export const useDocumentStore = create<DocumentState>()((set) => ({
     mainTextSize: 30,
     secondaryTextSize: 10,
     offset: -10,
+    marginY: 90,
+    marginX: 70,
   },
   content: new Map(),
   setDocument: (config) =>

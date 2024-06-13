@@ -1,5 +1,5 @@
 import localFont from "next/font/local";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { symbols } from "~/lib/constants";
 import { useDocumentStore } from "~/lib/store";
 import { generateGrid } from "~/lib/utils";
@@ -11,7 +11,6 @@ import { Textarea } from "./ui/textarea";
 const font = localFont({ src: "../fonts/KaiTi2.ttf" });
 
 export default function ToolBar() {
-  const [isClient, setIsClient] = useState(false);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   const mainTextSize = useDocumentStore((state) => state.config.mainTextSize);
@@ -24,13 +23,15 @@ export default function ToolBar() {
   const rowGap = useDocumentStore((state) => state.config.rowGap);
   const offset = useDocumentStore((state) => state.config.offset);
 
+  const marginX = useDocumentStore((state) => state.config.marginX);
+  const marginY = useDocumentStore((state) => state.config.marginY);
+
   const setDocument = useDocumentStore((state) => state.setDocument);
   function handleProcessInput() {
     generateGrid(inputRef.current?.value ?? "");
   }
 
   useEffect(() => {
-    setIsClient(true);
     generateGrid(inputRef.current?.value ?? "");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rowCount, columnCount]);
@@ -108,6 +109,24 @@ export default function ToolBar() {
               label="Row Gap"
               onValueChange={(e) => setDocument({ rowGap: e })}
             />
+            <ToolbarSlider
+              id="margin-x"
+              value={marginX}
+              min={0}
+              max={150}
+              inc={10}
+              label="Margin X"
+              onValueChange={(e) => setDocument({ marginX: e })}
+            />
+            <ToolbarSlider
+              id="margin-y"
+              value={marginY}
+              min={0}
+              max={150}
+              inc={10}
+              label="Margin Y"
+              onValueChange={(e) => setDocument({ marginY: e })}
+            />
           </div>
         </div>
         <Button className="w-full" onClick={handleProcessInput}>
@@ -127,10 +146,11 @@ interface ToolbarSliderProps {
   value: number;
   min?: number;
   max?: number;
+  inc?: number;
   onValueChange: (value: number) => void;
 }
 function ToolbarSlider(props: ToolbarSliderProps) {
-  const { id, label, value, onValueChange, min = 0, max = 40 } = props;
+  const { id, label, value, onValueChange, min = 0, max = 40, inc = 1 } = props;
   return (
     <div className="grid w-[150px] gap-1.5">
       <div className="flex items-center justify-between">
@@ -146,7 +166,7 @@ function ToolbarSlider(props: ToolbarSliderProps) {
         max={max}
         min={min}
         defaultValue={[value]}
-        step={1}
+        step={inc}
         onValueChange={([e]) => onValueChange(e ?? value)}
         className="[&_[role=slider]]:h-4 [&_[role=slider]]:w-4"
         aria-label="mainTextSize"
