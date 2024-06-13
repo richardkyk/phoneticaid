@@ -47,3 +47,12 @@ export function generateGrid(input: string) {
   setDocument({ rowCount: row + 1 });
   setContent(nextMap);
 }
+
+export function px2cm(px: number) {
+  const n = 0;
+  const cpi = 2.54; // centimeters per inch
+  const dpi = 96; // dots per inch
+  const ppd = window.devicePixelRatio; // pixels per dot
+  console.log(ppd);
+  return ((px * cpi) / (dpi * ppd)).toFixed(n);
+}

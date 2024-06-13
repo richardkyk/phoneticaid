@@ -1,10 +1,8 @@
-import { PDFDownloadLink } from "@react-pdf/renderer";
 import localFont from "next/font/local";
 import { useEffect, useRef, useState } from "react";
 import { symbols } from "~/lib/constants";
 import { useDocumentStore } from "~/lib/store";
 import { generateGrid } from "~/lib/utils";
-import PrintableArea from "./printable-area";
 import { Button } from "./ui/button";
 import { Label } from "./ui/label";
 import { Slider } from "./ui/slider";
@@ -38,12 +36,13 @@ export default function ToolBar() {
   }, [rowCount, columnCount]);
 
   return (
-    <div className="flex gap-4 print:hidden">
+    <div className="flex gap-4">
       <div className="flex-1">
         <Textarea
           ref={inputRef}
           className="h-full"
           placeholder="Enter Chinese text here"
+          defaultValue="獻供開始兩邊排班對面作揖各就拜位"
         />
       </div>
       <div className="flex flex-col gap-4">
@@ -114,15 +113,8 @@ export default function ToolBar() {
         <Button className="w-full" onClick={handleProcessInput}>
           Generate
         </Button>
-        <Button variant="secondary">
-          {isClient && (
-            <PDFDownloadLink
-              document={<PrintableArea />}
-              fileName="somename.pdf"
-            >
-              {({ loading }) => (loading ? "Loading..." : "Download")}
-            </PDFDownloadLink>
-          )}
+        <Button variant="secondary" onClick={() => window.print()}>
+          Download
         </Button>
       </div>
     </div>
