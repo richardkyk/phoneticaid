@@ -51,165 +51,172 @@ export default function ToolBar() {
   }, [rowCount, columnCount]);
 
   return (
-    <div className="sticky top-0 z-10 mx-auto flex h-[50px] w-full items-center gap-2 border-b bg-white px-8 py-2 print:hidden">
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button variant="ghost" size="icon">
-            <Text className="size-4" />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="h-[300px] w-[400px]" align="start">
-          <Textarea
-            value={userInput}
-            onChange={(e) => setUserInput(e.target.value)}
-            className="h-full w-full"
-            placeholder="Enter Chinese text here"
-          />
-        </PopoverContent>
-      </Popover>
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button variant="ghost" size="icon">
-            <Columns3 className="size-4" />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent align="start">
-          <ToolbarSlider
-            id="column-count"
-            value={columnCount}
-            min={1}
-            max={30}
-            label="Columns"
-            onValueChange={(e) => setDocument({ columnCount: e })}
-          />
-        </PopoverContent>
-      </Popover>
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button variant="ghost" size="icon">
-            <CaseSensitive className="size-4" />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent align="start">
-          <div className="flex flex-col gap-2">
-            <ToolbarSlider
-              id="main-text-size"
-              value={mainTextSize}
-              min={20}
-              max={60}
-              label="Main Text Size"
-              onValueChange={(e) => setDocument({ mainTextSize: e })}
+    <div className="sticky top-0 z-10 w-full border-b bg-white py-2 print:hidden">
+      <div className="mx-auto flex w-[210mm] items-center gap-2">
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant="ghost" size="icon">
+              <Text className="size-4" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="h-[300px] w-[400px]" align="start">
+            <Textarea
+              value={userInput}
+              onChange={(e) => setUserInput(e.target.value)}
+              className="h-full w-full"
+              placeholder="Enter Chinese text here"
             />
+          </PopoverContent>
+        </Popover>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant="ghost" size="icon">
+              <Columns3 className="size-4" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent align="start">
             <ToolbarSlider
-              id="secondary-text-size"
-              value={secondaryTextSize}
-              min={0}
-              label="Secondary Text Size"
-              onValueChange={(e) => setDocument({ secondaryTextSize: e })}
+              id="column-count"
+              value={columnCount}
+              min={1}
+              max={30}
+              label="Columns"
+              onValueChange={(e) => setDocument({ columnCount: e })}
             />
-            <ToolbarSlider
-              id="pinyin-offset"
-              value={offset}
-              min={-10}
-              max={10}
-              label="Pinyin Offset"
-              onValueChange={(e) => setDocument({ offset: e })}
-            />
-          </div>
-        </PopoverContent>
-      </Popover>
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button variant="ghost" size="icon">
-            <FoldHorizontal className="size-4" />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent align="start">
-          <div className="flex flex-col gap-2">
-            <ToolbarSlider
-              id="row-gap"
-              value={rowGap}
-              min={0}
-              max={40}
-              label="Row Gap"
-              onValueChange={(e) => setDocument({ rowGap: e })}
-            />
-            <ToolbarSlider
-              id="column-gap"
-              value={columnGap}
-              min={0}
-              max={40}
-              label="Column Gap"
-              onValueChange={(e) => setDocument({ columnGap: e })}
-            />
-          </div>
-        </PopoverContent>
-      </Popover>
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button variant="ghost" size="icon">
-            <Table2 className="size-4" />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent align="start">
-          <div className="flex flex-col gap-2">
-            <ToolbarSlider
-              id="margin-y"
-              value={marginY}
-              min={0}
-              max={150}
-              inc={10}
-              label="Horizontal Margin"
-              onValueChange={(e) => setDocument({ marginY: e })}
-            />
-            <ToolbarSlider
-              id="margin-x"
-              value={marginX}
-              min={0}
-              max={150}
-              inc={10}
-              label="Vertical Margin"
-              onValueChange={(e) => setDocument({ marginX: e })}
-            />
-          </div>
-        </PopoverContent>
-      </Popover>
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button variant="ghost" size="icon">
-            <Pi className="size-4" />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent align="start">
-          <div className="grid grid-cols-4 justify-center gap-1">
-            {symbols.map((symbol) => (
-              <Button
-                variant="ghost"
-                size="reset"
-                key={symbol.value}
-                className={`size-4 ${symbol.needsFont && font.className}`}
-                onClick={async () => {
-                  await navigator.clipboard.writeText(symbol.value);
-                  toast.success("Copied to clipboard");
-                }}
-              >
-                {symbol.value}
-              </Button>
-            ))}
-          </div>
-        </PopoverContent>
-      </Popover>
+          </PopoverContent>
+        </Popover>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant="ghost" size="icon">
+              <CaseSensitive className="size-4" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent align="start">
+            <div className="flex flex-col gap-2">
+              <ToolbarSlider
+                id="main-text-size"
+                value={mainTextSize}
+                min={20}
+                max={60}
+                label="Main Text Size"
+                onValueChange={(e) => setDocument({ mainTextSize: e })}
+              />
+              <ToolbarSlider
+                id="secondary-text-size"
+                value={secondaryTextSize}
+                min={0}
+                label="Pinyin Text Size"
+                onValueChange={(e) => setDocument({ secondaryTextSize: e })}
+              />
+              <ToolbarSlider
+                id="pinyin-offset"
+                value={offset}
+                min={-10}
+                max={10}
+                label="Pinyin Offset"
+                onValueChange={(e) => setDocument({ offset: e })}
+              />
+            </div>
+          </PopoverContent>
+        </Popover>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant="ghost" size="icon">
+              <FoldHorizontal className="size-4" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent align="start">
+            <div className="flex flex-col gap-2">
+              <ToolbarSlider
+                id="row-gap"
+                value={rowGap}
+                min={0}
+                max={40}
+                label="Row Gap"
+                onValueChange={(e) => setDocument({ rowGap: e })}
+              />
+              <ToolbarSlider
+                id="column-gap"
+                value={columnGap}
+                min={0}
+                max={40}
+                label="Column Gap"
+                onValueChange={(e) => setDocument({ columnGap: e })}
+              />
+            </div>
+          </PopoverContent>
+        </Popover>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant="ghost" size="icon">
+              <Table2 className="size-4" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent align="start">
+            <div className="flex flex-col gap-2">
+              <ToolbarSlider
+                id="margin-y"
+                value={marginY}
+                min={0}
+                max={150}
+                inc={10}
+                label="Horizontal Margin"
+                onValueChange={(e) => setDocument({ marginY: e })}
+              />
+              <ToolbarSlider
+                id="margin-x"
+                value={marginX}
+                min={0}
+                max={150}
+                inc={10}
+                label="Vertical Margin"
+                onValueChange={(e) => setDocument({ marginX: e })}
+              />
+            </div>
+          </PopoverContent>
+        </Popover>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant="ghost" size="icon">
+              <Pi className="size-4" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent align="start">
+            <div className="grid grid-cols-4 justify-center gap-1">
+              {symbols.map((symbol) => (
+                <Button
+                  variant="ghost"
+                  size="reset"
+                  key={symbol.value}
+                  className={`size-4 ${symbol.needsFont && font.className}`}
+                  onClick={async () => {
+                    await navigator.clipboard.writeText(symbol.value);
+                    toast.success("Copied to clipboard");
+                  }}
+                >
+                  {symbol.value}
+                </Button>
+              ))}
+            </div>
+          </PopoverContent>
+        </Popover>
 
-      <Button
-        onClick={handleProcessInput}
-        size="reset"
-        className="h-6 px-2 text-xs"
-      >
-        Generate
-      </Button>
-      <Button variant="ghost" size="icon" onClick={() => window.print()}>
-        <ArrowDownToLine className="size-4" />
-      </Button>
+        <Button
+          onClick={handleProcessInput}
+          size="reset"
+          className="h-6 px-2 text-xs"
+        >
+          Generate
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => window.print()}
+          className="ml-auto"
+        >
+          <ArrowDownToLine className="size-4" />
+        </Button>
+      </div>
     </div>
   );
 }
