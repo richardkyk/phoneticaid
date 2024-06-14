@@ -15,6 +15,7 @@ interface DocumentState {
     offset: number;
     marginX: number;
     marginY: number;
+    pageHeight: number;
   };
   content: Map<string, CellState>;
   setDocument: (config: Partial<DocumentState["config"]>) => void;
@@ -33,6 +34,7 @@ export const useDocumentStore = create<DocumentState>()((set) => ({
     offset: 0,
     marginY: 90,
     marginX: 70,
+    pageHeight: 1000,
   },
   content: new Map(),
   setDocument: (config) =>

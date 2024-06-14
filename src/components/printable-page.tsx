@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { useDocumentStore } from "~/lib/store";
 
 interface PrintablePageProps {
@@ -6,11 +7,30 @@ interface PrintablePageProps {
 export function PrintablePage(props: PrintablePageProps) {
   const { children } = props;
 
+  const pageRef = useRef<HTMLDivElement>(null);
   const marginX = useDocumentStore((state) => state.config.marginX);
   const marginY = useDocumentStore((state) => state.config.marginY);
 
+  const mainFontSize = useDocumentStore((state) => state.config.mainTextSize);
+  const secondaryFontSize = useDocumentStore(
+    (state) => state.config.secondaryTextSize,
+  );
+  const rowGap = useDocumentStore((state) => state.config.rowGap);
+  const offset = useDocumentStore((state) => state.config.offset);
+
+  const setDocument = useDocumentStore((state) => state.setDocument);
+
+  useEffect(() => {
+    if (!pageRef.current) return;
+    const dimensions = pageRef.current.getBoundingClientRect();
+    const { height } = dimensions;
+    setDocument({ pageHeight: height });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pageRef.current]);
+
   return (
     <div
+      ref={pageRef}
       className="relative flex h-[297mm] w-[210mm] flex-col border print:border-transparent"
       style={{
         padding: `${marginY}px ${marginX}px`,

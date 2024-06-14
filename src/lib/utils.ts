@@ -48,10 +48,30 @@ export function generateGrid(input: string) {
   setContent(nextMap);
 }
 
-export function px2mm(px: number) {
-  const n = 0;
-  const mmpi = 25.4; // millimeters per inch
-  const dpi = 96; // dots per inch
-  const ppd = window.devicePixelRatio; // pixels per dot
-  return ((px * mmpi) / (dpi * ppd)).toFixed(n);
+export function pageSlices(height: number) {
+  if (height === 0) return [];
+  const rowCount = useDocumentStore.getState().config.rowCount;
+
+  const mainFontSize = useDocumentStore.getState().config.mainTextSize;
+  const secondaryFontSize =
+    useDocumentStore.getState().config.secondaryTextSize;
+  const rowGap = useDocumentStore.getState().config.rowGap;
+  const offset = useDocumentStore.getState().config.offset;
+  const marginY = useDocumentStore.getState().config.marginY;
+
+  const rowHeight = mainFontSize + secondaryFontSize + rowGap + offset;
+  const avilableHeight = height - marginY * 2 + rowGap; // add the last rowGap since the last row doesn't need to space underneath it
+  const sliceSize = Math.floor(avilableHeight / rowHeight);
+
+  console.log(sliceSize);
+  const rowArray = Array(rowCount)
+    .fill(0)
+    .map((_, i) => i);
+
+  const out = [];
+  for (let i = 0; i < rowArray.length; i += sliceSize) {
+    const slice = rowArray.slice(i, i + sliceSize);
+    out.push(slice);
+  }
+  return out;
 }
