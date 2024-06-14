@@ -63,7 +63,6 @@ export function pageSlices(height: number) {
   const avilableHeight = height - marginY * 2 + rowGap; // add the last rowGap since the last row doesn't need to space underneath it
   const sliceSize = Math.floor(avilableHeight / rowHeight);
 
-  console.log(sliceSize);
   const rowArray = Array(rowCount)
     .fill(0)
     .map((_, i) => i);

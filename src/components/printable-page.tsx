@@ -3,9 +3,10 @@ import { useDocumentStore } from "~/lib/store";
 
 interface PrintablePageProps {
   children: React.ReactNode;
+  pageNum: number;
 }
 export function PrintablePage(props: PrintablePageProps) {
-  const { children } = props;
+  const { children, pageNum } = props;
 
   const pageRef = useRef<HTMLDivElement>(null);
   const marginX = useDocumentStore((state) => state.config.marginX);
@@ -29,6 +30,7 @@ export function PrintablePage(props: PrintablePageProps) {
         padding: `${marginY}px ${marginX}px`,
       }}
     >
+      {pageNum !== 0 && <div className="page-break-before"></div>}
       <div
         className="absolute inset-x-0 h-px w-full border-t border-dashed print:border-transparent"
         style={{ top: `${marginY}px` }}
@@ -46,7 +48,6 @@ export function PrintablePage(props: PrintablePageProps) {
         style={{ right: `${marginX}px` }}
       ></div>
       {children}
-      <div className="break-before-page"></div>
     </div>
   );
 }

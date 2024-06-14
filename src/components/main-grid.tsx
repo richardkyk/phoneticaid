@@ -28,7 +28,7 @@ export function MainGrid() {
         <ToolBar />
       </div>
       {pageSlices(pageHeight).map((page, i) => (
-        <PrintablePage key={i}>
+        <PrintablePage key={i} pageNum={i}>
           <div
             className="flex flex-col"
             style={{
@@ -61,9 +61,7 @@ export function MainGrid() {
                       </div>
 
                       <div
-                        contentEditable
-                        suppressContentEditableWarning
-                        className={`flex items-center justify-center border border-gray-100 border-t-transparent hover:border-gray-500 hover:border-t-gray-500 print:border-transparent ${font.className}`}
+                        className={`flex items-center justify-center border border-gray-100 border-t-transparent print:border-transparent ${font.className}`}
                         style={{
                           fontSize: `${mainTextSize}px`,
                           height: `${mainTextSize}px`,
