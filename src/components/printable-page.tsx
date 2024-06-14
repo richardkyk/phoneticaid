@@ -30,19 +30,19 @@ export function PrintablePage(props: PrintablePageProps) {
       }}
     >
       <div
-        className="absolute inset-x-0 h-px w-full border-t border-dashed"
+        className="absolute inset-x-0 h-px w-full border-t border-dashed print:border-transparent"
         style={{ top: `${marginY}px` }}
       ></div>
       <div
-        className="absolute inset-x-0 h-px w-full border-b border-dashed"
+        className="absolute inset-x-0 h-px w-full border-b border-dashed print:border-transparent"
         style={{ bottom: `${marginY}px` }}
       ></div>
       <div
-        className="absolute inset-y-0 h-full w-px border-l border-dashed"
+        className="absolute inset-y-0 h-full w-px border-l border-dashed print:border-transparent"
         style={{ left: `${marginX}px` }}
       ></div>
       <div
-        className="absolute inset-y-0 h-full w-px border-r border-dashed"
+        className="absolute inset-y-0 h-full w-px border-r border-dashed print:border-transparent"
         style={{ right: `${marginX}px` }}
       ></div>
       {children}

@@ -23,7 +23,7 @@ export function MainGrid() {
   const pageHeight = useDocumentStore((state) => state.config.pageHeight);
 
   return (
-    <div className="flex w-full max-w-screen-lg flex-col items-center gap-8">
+    <div className="flex w-full max-w-screen-lg flex-col items-center gap-8 print:gap-0">
       <div className="w-full px-8 print:hidden">
         <ToolBar />
       </div>
