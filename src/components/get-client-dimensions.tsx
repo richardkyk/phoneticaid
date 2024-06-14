@@ -18,7 +18,7 @@ export function GetClientDimensions() {
   return (
     <div
       ref={pageRef}
-      className="absolute h-[297mm] w-[210mm] translate-x-[100%] print:hidden"
+      className="absolute h-[297mm] w-[210mm] -translate-x-[100%] print:hidden"
     ></div>
   );
 }
