@@ -11,13 +11,6 @@ export function PrintablePage(props: PrintablePageProps) {
   const marginX = useDocumentStore((state) => state.config.marginX);
   const marginY = useDocumentStore((state) => state.config.marginY);
 
-  const mainFontSize = useDocumentStore((state) => state.config.mainTextSize);
-  const secondaryFontSize = useDocumentStore(
-    (state) => state.config.secondaryTextSize,
-  );
-  const rowGap = useDocumentStore((state) => state.config.rowGap);
-  const offset = useDocumentStore((state) => state.config.offset);
-
   const setDocument = useDocumentStore((state) => state.setDocument);
 
   useEffect(() => {
