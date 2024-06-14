@@ -4,7 +4,6 @@ import localFont from "next/font/local";
 import { useDocumentStore } from "~/lib/store";
 import { pageSlices } from "~/lib/utils";
 import { PrintablePage } from "./printable-page";
-import ToolBar from "./tool-bar";
 
 // Font files can be colocated inside of `pages`
 const font = localFont({ src: "../fonts/KaiTi2.ttf" });
@@ -24,9 +23,6 @@ export function MainGrid() {
 
   return (
     <div className="flex w-full max-w-screen-lg flex-col items-center gap-8 print:gap-0">
-      <div className="w-full px-8 print:hidden">
-        <ToolBar />
-      </div>
       {pageSlices(pageHeight).map((page, i) => (
         <PrintablePage key={i} pageNum={i}>
           <div

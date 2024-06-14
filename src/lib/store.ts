@@ -18,6 +18,8 @@ interface DocumentState {
     pageHeight: number;
   };
   content: Map<string, CellState>;
+  userInput: string;
+  setUserInput: (input: string) => void;
   setDocument: (config: Partial<DocumentState["config"]>) => void;
   setCell: (key: string, value: CellState) => void;
   setContent: (content: Map<string, CellState>) => void;
@@ -37,6 +39,8 @@ export const useDocumentStore = create<DocumentState>()((set) => ({
     pageHeight: 1000,
   },
   content: new Map(),
+  userInput: "",
+  setUserInput: (input) => set({ userInput: input }),
   setDocument: (config) =>
     set((state) => ({ config: { ...state.config, ...config } })),
   setCell: (key: string, value: CellState) =>
