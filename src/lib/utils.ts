@@ -37,7 +37,7 @@ export function generateGrid(input: string) {
     const isLastChar = (index + 1) % columnCount === 0;
     if (isLastChar) {
       row++;
-      index = 0;
+      index = -1; // this is -1 since it gets incremented immediately after
     }
 
     prevStep = isLastChar ? "last-char" : "";
