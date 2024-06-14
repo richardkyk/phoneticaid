@@ -30,7 +30,7 @@ export const useDocumentStore = create<DocumentState>()((set) => ({
     columnGap: 6,
     mainTextSize: 30,
     secondaryTextSize: 10,
-    offset: -10,
+    offset: 0,
     marginY: 90,
     marginX: 70,
   },

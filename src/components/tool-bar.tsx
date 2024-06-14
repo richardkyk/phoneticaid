@@ -69,20 +69,22 @@ export default function ToolBar() {
             <ToolbarSlider
               id="main-text-size"
               value={mainTextSize}
+              min={20}
               label="Main Text Size"
               onValueChange={(e) => setDocument({ mainTextSize: e })}
             />
             <ToolbarSlider
               id="secondary-text-size"
               value={secondaryTextSize}
+              min={10}
               label="Secondary Text Size"
               onValueChange={(e) => setDocument({ secondaryTextSize: e })}
             />
             <ToolbarSlider
               id="pinyin-offset"
               value={offset}
-              min={-20}
-              max={20}
+              min={-10}
+              max={10}
               label="Pinyin Offset"
               onValueChange={(e) => setDocument({ offset: e })}
             />
@@ -104,7 +106,7 @@ export default function ToolBar() {
             <ToolbarSlider
               id="row-gap"
               value={rowGap}
-              min={-10}
+              min={0}
               max={30}
               label="Row Gap"
               onValueChange={(e) => setDocument({ rowGap: e })}

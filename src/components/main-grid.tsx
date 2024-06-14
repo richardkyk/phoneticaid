@@ -23,7 +23,7 @@ export function MainGrid() {
   const content = useDocumentStore((state) => state.content);
 
   return (
-    <div className="flex w-full max-w-screen-lg flex-col gap-8">
+    <div className="flex w-full max-w-screen-lg flex-col items-center gap-8">
       <div className="w-full px-8 print:hidden">
         <ToolBar />
       </div>
@@ -55,10 +55,11 @@ export function MainGrid() {
                         <div
                           contentEditable
                           suppressContentEditableWarning
-                          className="absolute flex w-full items-center justify-center border-x border-t border-gray-100 font-sans  hover:border-b hover:border-gray-500 print:border-transparent"
+                          className="flex w-full items-center justify-center border-x border-t border-gray-100 font-sans  hover:border-b hover:border-gray-500 print:border-transparent"
                           style={{
                             fontSize: `${secondaryTextSize}px`,
                             height: `${secondaryTextSize}px`,
+                            marginBottom: `${offset}px`,
                           }}
                         >
                           {content.get(`${i}:${j}`)?.pinyin}
@@ -72,7 +73,6 @@ export function MainGrid() {
                             fontSize: `${mainTextSize}px`,
                             height: `${mainTextSize}px`,
                             width: `${mainTextSize}px`,
-                            marginTop: `${secondaryTextSize + offset}px`,
                           }}
                         >
                           {content.get(`${i}:${j}`)?.value}
