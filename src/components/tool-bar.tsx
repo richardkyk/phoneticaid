@@ -11,6 +11,7 @@ import {
   Columns3,
   FoldHorizontal,
   Pi,
+  Proportions,
   Table2,
   Type,
 } from "lucide-react";
@@ -43,6 +44,7 @@ export default function ToolBar() {
   const rowGap = useDocumentStore((state) => state.config.rowGap);
   const offset = useDocumentStore((state) => state.config.offset);
   const align = useDocumentStore((state) => state.config.align);
+  const layout = useDocumentStore((state) => state.config.layout);
 
   const marginX = useDocumentStore((state) => state.config.marginX);
   const marginY = useDocumentStore((state) => state.config.marginY);
@@ -58,7 +60,7 @@ export default function ToolBar() {
   }, [rowCount, columnCount]);
 
   return (
-    <div className="sticky top-0 z-10 w-full border-b bg-white py-2 print:hidden">
+    <div className="fixed inset-x-0 top-0 z-10 h-[42px] w-full border-b bg-white py-2 print:hidden">
       <div className="mx-auto flex max-w-[210mm] items-center gap-2">
         <Popover>
           <PopoverTrigger asChild>
@@ -75,6 +77,26 @@ export default function ToolBar() {
             />
           </PopoverContent>
         </Popover>
+        <Select
+          value={layout}
+          onValueChange={(e) =>
+            setDocument({
+              layout: e as "portrait" | "landscape",
+            })
+          }
+        >
+          <SelectTrigger asChild>
+            <Button variant="ghost" size="icon">
+              <Proportions className="size-4" />
+            </Button>
+          </SelectTrigger>
+          <SelectContent align="start">
+            <div className="flex flex-col text-xs">
+              <SelectItem value="portrait">Portrait</SelectItem>
+              <SelectItem value="landscape">Landscape</SelectItem>
+            </div>
+          </SelectContent>
+        </Select>
         <Popover>
           <PopoverTrigger asChild>
             <Button variant="ghost" size="icon">

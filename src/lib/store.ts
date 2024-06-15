@@ -16,7 +16,9 @@ interface DocumentState {
     marginX: number;
     marginY: number;
     pageHeight: number;
+    pageWidth: number;
     align: "start" | "center" | "end" | "space-between";
+    layout: "portrait" | "landscape";
   };
   content: Map<string, CellState>;
   userInput: string;
@@ -37,8 +39,10 @@ export const useDocumentStore = create<DocumentState>()((set) => ({
     offset: 0,
     marginY: 90,
     marginX: 70,
-    pageHeight: 1000,
+    pageHeight: 0,
+    pageWidth: 0,
     align: "start",
+    layout: "portrait",
   },
   content: new Map(),
   userInput: "",

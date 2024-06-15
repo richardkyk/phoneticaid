@@ -10,11 +10,15 @@ export function PrintablePage(props: PrintablePageProps) {
   const marginX = useDocumentStore((state) => state.config.marginX);
   const marginY = useDocumentStore((state) => state.config.marginY);
 
+  const layout = useDocumentStore((state) => state.config.layout);
+
   return (
     <div
-      className="relative flex h-[297mm] w-[210mm] flex-col border"
+      className="relative flex flex-col border"
       style={{
         padding: `${marginY}px ${marginX}px`,
+        height: layout === "portrait" ? "297mm" : "210mm",
+        width: layout === "portrait" ? "210mm" : "297mm",
       }}
     >
       {pageNum !== 0 && <div className="page-break-before"></div>}

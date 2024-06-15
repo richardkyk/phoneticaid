@@ -10,8 +10,8 @@ export function GetClientDimensions() {
   useEffect(() => {
     if (!pageRef.current) return;
     const dimensions = pageRef.current.getBoundingClientRect();
-    const { height } = dimensions;
-    setDocument({ pageHeight: height });
+    const { height, width } = dimensions;
+    setDocument({ pageHeight: height, pageWidth: width });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageRef.current]);
 
