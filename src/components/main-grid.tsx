@@ -45,7 +45,7 @@ export function MainGrid() {
 
   return (
     <div
-      className="mx-auto flex  flex-col items-center gap-8 print:gap-0"
+      className="mx-auto flex flex-col items-center gap-8 print:gap-0"
       style={{ width: layout === "portrait" ? "210mm" : "297mm" }}
     >
       {pageSlices(overflowDimension).map((page, i) => (

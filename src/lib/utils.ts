@@ -25,7 +25,10 @@ export async function generateGrid(input: string) {
   for (const line of lines) {
     if (row === rowCount) setDocument({ rowCount: rowCount + 1 });
     const simplifiedLine = zhconv(line, "zh-Hans");
-    const pinyinLine = pinyin(simplifiedLine, { type: "array" });
+
+    const pinyinLine = pinyin(simplifiedLine === "" ? "" : simplifiedLine, {
+      type: "array",
+    });
 
     const lineArr = [...line];
     for (const [i, char] of lineArr.entries()) {
@@ -71,7 +74,6 @@ export function pageSlices(availableSpace: number) {
     const columnWidth = mainFontSize + columnGap;
     const useableSpace = availableSpace - marginX * 2 + columnGap; // add the last rowGap since the last row doesn't need to space underneath it
     sliceSize = Math.floor(useableSpace / columnWidth);
-    console.log(sliceSize);
   }
 
   const rowArray = Array(rowCount)
