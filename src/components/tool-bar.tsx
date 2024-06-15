@@ -52,7 +52,7 @@ export default function ToolBar() {
 
   return (
     <div className="sticky top-0 z-10 w-full border-b bg-white py-2 print:hidden">
-      <div className="mx-auto flex w-[210mm] items-center gap-2">
+      <div className="mx-auto flex max-w-[210mm] items-center gap-2">
         <Popover>
           <PopoverTrigger asChild>
             <Button variant="ghost" size="icon">
@@ -238,7 +238,7 @@ function ToolbarSlider(props: ToolbarSliderProps) {
         <Label htmlFor={id} className="text-xs">
           {label}
         </Label>
-        <span className="text-muted-foreground hover:border-border w-8 rounded-md border border-transparent px-1 py-0.5 text-right text-sm">
+        <span className="w-8 rounded-md border border-transparent px-1 py-0.5 text-right text-sm text-muted-foreground hover:border-border">
           {value}
         </span>
       </div>
