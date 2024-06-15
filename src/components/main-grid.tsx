@@ -18,6 +18,8 @@ export function MainGrid() {
   const rowGap = useDocumentStore((state) => state.config.rowGap);
   const offset = useDocumentStore((state) => state.config.offset);
 
+  const align = useDocumentStore((state) => state.config.align);
+
   const content = useDocumentStore((state) => state.content);
   const pageHeight = useDocumentStore((state) => state.config.pageHeight);
 
@@ -37,6 +39,7 @@ export function MainGrid() {
                 className="flex"
                 style={{
                   gap: `${columnGap}px`,
+                  justifyContent: align,
                 }}
               >
                 {Array(columnCount)

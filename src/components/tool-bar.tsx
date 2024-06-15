@@ -1,13 +1,18 @@
 "use client";
 
+import { SelectTrigger } from "@radix-ui/react-select";
 import {
+  AlignCenter,
+  AlignJustify,
+  AlignLeft,
+  AlignRight,
   ArrowDownToLine,
   CaseSensitive,
   Columns3,
   FoldHorizontal,
   Pi,
   Table2,
-  Text,
+  Type,
 } from "lucide-react";
 import localFont from "next/font/local";
 import { useEffect } from "react";
@@ -18,6 +23,7 @@ import { generateGrid } from "~/lib/utils";
 import { Button } from "./ui/button";
 import { Label } from "./ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { Select, SelectContent, SelectItem } from "./ui/select";
 import { Slider } from "./ui/slider";
 import { Textarea } from "./ui/textarea";
 
@@ -36,6 +42,7 @@ export default function ToolBar() {
   const columnGap = useDocumentStore((state) => state.config.columnGap);
   const rowGap = useDocumentStore((state) => state.config.rowGap);
   const offset = useDocumentStore((state) => state.config.offset);
+  const align = useDocumentStore((state) => state.config.align);
 
   const marginX = useDocumentStore((state) => state.config.marginX);
   const marginY = useDocumentStore((state) => state.config.marginY);
@@ -56,7 +63,7 @@ export default function ToolBar() {
         <Popover>
           <PopoverTrigger asChild>
             <Button variant="ghost" size="icon">
-              <Text className="size-4" />
+              <Type className="size-4" />
             </Button>
           </PopoverTrigger>
           <PopoverContent className="h-[300px] w-[400px]" align="start">
@@ -175,6 +182,32 @@ export default function ToolBar() {
             </div>
           </PopoverContent>
         </Popover>
+        <Select
+          value={align}
+          onValueChange={(e) =>
+            setDocument({
+              align: e as "start" | "center" | "end" | "space-between",
+            })
+          }
+        >
+          <SelectTrigger asChild>
+            <Button variant="ghost" size="icon">
+              {align === "start" && <AlignLeft className="size-4" />}
+              {align === "center" && <AlignCenter className="size-4" />}
+              {align === "end" && <AlignRight className="size-4" />}
+              {align === "space-between" && <AlignJustify className="size-4" />}
+            </Button>
+          </SelectTrigger>
+          <SelectContent align="start">
+            <div className="flex flex-col text-xs">
+              <SelectItem value="start">Left</SelectItem>
+              <SelectItem value="center">Center</SelectItem>
+              <SelectItem value="end">Right</SelectItem>
+              <SelectItem value="space-between">Justify</SelectItem>
+            </div>
+          </SelectContent>
+        </Select>
+
         <Popover>
           <PopoverTrigger asChild>
             <Button variant="ghost" size="icon">
