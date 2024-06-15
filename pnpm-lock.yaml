@@ -8,6 +8,9 @@ overrides:
   restructure: 3.0.0
 
 dependencies:
+  '@pinyin-pro/data':
+    specifier: ^1.1.0
+    version: 1.1.0
   '@radix-ui/react-label':
     specifier: ^2.0.2
     version: 2.0.2(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
@@ -74,6 +77,9 @@ dependencies:
   tailwindcss-animate:
     specifier: ^1.0.7
     version: 1.0.7(tailwindcss@3.4.4)
+  zhconv-web:
+    specifier: ^0.3.1
+    version: 0.3.1
   zod:
     specifier: ^3.23.3
     version: 3.23.8
@@ -365,6 +371,10 @@ packages:
     dependencies:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.17.1
+
+  /@pinyin-pro/data@1.1.0:
+    resolution: {integrity: sha512-Lytbr1+PC2ULtdqpk9DogqaMGow6Kp8eZb9/X27QI0+S1AHxorz6nObeqaVRVTE5UjKIGj/NWT3ZN+j+ZYymtA==}
+    dev: false
 
   /@pkgjs/parseargs@0.11.0:
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
@@ -3913,6 +3923,10 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
     dev: true
+
+  /zhconv-web@0.3.1:
+    resolution: {integrity: sha512-tHD8uKlhOiEGhy61HuelIJbg5oohtb/P2nvyCHMGA2ggC2ei6R9NvrKHqAYBgVBZLluFpYlCoCUHoe/dBpsFUQ==}
+    dev: false
 
   /zod@3.23.8:
     resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}

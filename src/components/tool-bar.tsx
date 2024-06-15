@@ -48,12 +48,12 @@ export default function ToolBar() {
   const marginY = useDocumentStore((state) => state.config.marginY);
 
   const setDocument = useDocumentStore((state) => state.setDocument);
-  function handleProcessInput() {
-    generateGrid(userInput);
+  async function handleProcessInput() {
+    await generateGrid(userInput);
   }
 
   useEffect(() => {
-    generateGrid(userInput);
+    void generateGrid(userInput);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rowCount, columnCount]);
 

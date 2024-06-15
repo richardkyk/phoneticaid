@@ -1,13 +1,15 @@
 import { clsx, type ClassValue } from "clsx";
 import { pinyin } from "pinyin-pro";
 import { twMerge } from "tailwind-merge";
+import init, { zhconv } from "zhconv-web";
 import { useDocumentStore, type CellState } from "./store";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function generateGrid(input: string) {
+export async function generateGrid(input: string) {
+  await init();
   const columnCount = useDocumentStore.getState().config.columnCount;
   const rowCount = useDocumentStore.getState().config.rowCount;
   const setContent = useDocumentStore.getState().setContent;
@@ -17,34 +19,30 @@ export function generateGrid(input: string) {
 
   let row = 0;
   let col = 0;
-  let index = 0;
-  let prevStep = "";
-  for (const char of input) {
-    if (row === rowCount) setDocument({ rowCount: rowCount + 1 });
-    if (char === "\n") {
-      col = 0;
-      if (prevStep !== "last-char") row++;
-      index = 0;
-      continue;
-    }
-    const value = {
-      value: char,
-      pinyin: char === "" ? "mǔ" : pinyin(char, { removeNonZh: true }),
-    };
-    const key = `${row}:${col}`;
-    nextMap.set(key, value);
-    col = (col + 1) % columnCount;
-    const isLastChar = (index + 1) % columnCount === 0;
-    if (isLastChar) {
-      row++;
-      index = -1; // this is -1 since it gets incremented immediately after
-    }
 
-    prevStep = isLastChar ? "last-char" : "";
-    index++;
+  const lines = input.split("\n");
+
+  for (const line of lines) {
+    if (row === rowCount) setDocument({ rowCount: rowCount + 1 });
+    const simplifiedLine = zhconv(line, "zh-Hans");
+    const pinyinLine = pinyin(simplifiedLine, { type: "array" });
+
+    const lineArr = [...line];
+    for (const [i, char] of lineArr.entries()) {
+      const _py = pinyinLine[i] ?? "";
+      const py = char === "" ? "mǔ" : _py;
+
+      nextMap.set(`${row}:${col}`, { value: char, pinyin: py });
+      col = (col + 1) % columnCount;
+      const endOfLine = i === lineArr.length - 1;
+      const endOfRow = (i + 1) % columnCount === 0;
+      if (endOfRow && !endOfLine) row++;
+    }
+    col = 0;
+    row++;
   }
 
-  setDocument({ rowCount: row + 1 });
+  setDocument({ rowCount: row }); // remove any unused rows
   setContent(nextMap);
 }
 
