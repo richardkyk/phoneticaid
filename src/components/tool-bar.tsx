@@ -6,12 +6,16 @@ import {
   AlignJustify,
   AlignLeft,
   AlignRight,
+  ArrowBigDownDash,
+  ArrowBigLeftDash,
+  ArrowBigRightDash,
   ArrowDownToLine,
   CaseSensitive,
   Columns3,
   FoldHorizontal,
   Pi,
   Proportions,
+  Rows3,
   Table2,
   Type,
 } from "lucide-react";
@@ -25,6 +29,7 @@ import { Button } from "./ui/button";
 import { Label } from "./ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Select, SelectContent, SelectItem } from "./ui/select";
+import { Separator } from "./ui/separator";
 import { Slider } from "./ui/slider";
 import { Textarea } from "./ui/textarea";
 
@@ -45,6 +50,12 @@ export default function ToolBar() {
   const offset = useDocumentStore((state) => state.config.offset);
   const align = useDocumentStore((state) => state.config.align);
   const layout = useDocumentStore((state) => state.config.layout);
+  const textDirection = useDocumentStore((state) => state.config.textDirection);
+
+  const textFlow =
+    textDirection === "ltr" || textDirection === "rtl"
+      ? "horizontal"
+      : "vertical";
 
   const marginX = useDocumentStore((state) => state.config.marginX);
   const marginY = useDocumentStore((state) => state.config.marginY);
@@ -77,6 +88,7 @@ export default function ToolBar() {
             />
           </PopoverContent>
         </Popover>
+        <Separator orientation="vertical" className="h-4" />
         <Select
           value={layout}
           onValueChange={(e) =>
@@ -100,7 +112,41 @@ export default function ToolBar() {
         <Popover>
           <PopoverTrigger asChild>
             <Button variant="ghost" size="icon">
-              <Columns3 className="size-4" />
+              <Table2 className="size-4" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent align="start">
+            <div className="flex flex-col gap-2">
+              <ToolbarSlider
+                id="margin-y"
+                value={marginY}
+                min={0}
+                max={150}
+                inc={10}
+                label="Horizontal Margin"
+                onValueChange={(e) => setDocument({ marginY: e })}
+              />
+              <ToolbarSlider
+                id="margin-x"
+                value={marginX}
+                min={0}
+                max={150}
+                inc={10}
+                label="Vertical Margin"
+                onValueChange={(e) => setDocument({ marginX: e })}
+              />
+            </div>
+          </PopoverContent>
+        </Popover>
+        <Separator orientation="vertical" className="h-4" />
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant="ghost" size="icon">
+              {textFlow === "horizontal" ? (
+                <Columns3 className="size-4" />
+              ) : (
+                <Rows3 className="size-4" />
+              )}
             </Button>
           </PopoverTrigger>
           <PopoverContent align="start">
@@ -109,11 +155,50 @@ export default function ToolBar() {
               value={columnCount}
               min={1}
               max={30}
-              label="Columns"
+              label={textFlow === "horizontal" ? "Column Count" : "Row Count"}
               onValueChange={(e) => setDocument({ columnCount: e })}
             />
           </PopoverContent>
         </Popover>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant="ghost" size="icon">
+              <FoldHorizontal className="size-4" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent align="start">
+            <div className="flex flex-col gap-2">
+              <ToolbarSlider
+                id="row-gap"
+                value={rowGap}
+                min={0}
+                max={40}
+                label="Row Gap"
+                onValueChange={(e) =>
+                  setDocument({
+                    ...(textFlow === "horizontal" && { rowGap: e }),
+                    ...(textFlow === "vertical" && { columnGap: e }),
+                  })
+                }
+              />
+              <ToolbarSlider
+                id="column-gap"
+                value={columnGap}
+                min={0}
+                max={40}
+                label="Column Gap"
+                onValueChange={(e) =>
+                  setDocument({
+                    ...(textFlow === "horizontal" && { columnGap: e }),
+                    ...(textFlow === "vertical" && { rowGap: e }),
+                  })
+                }
+              />
+            </div>
+          </PopoverContent>
+        </Popover>
+        <Separator orientation="vertical" className="h-4" />
+
         <Popover>
           <PopoverTrigger asChild>
             <Button variant="ghost" size="icon">
@@ -148,62 +233,43 @@ export default function ToolBar() {
             </div>
           </PopoverContent>
         </Popover>
-        <Popover>
-          <PopoverTrigger asChild>
+        <Select
+          value={textDirection}
+          onValueChange={(e) =>
+            setDocument({
+              textDirection: e as "ltr" | "rtl" | "ttb-lr" | "ttb-rl",
+            })
+          }
+        >
+          <SelectTrigger asChild>
             <Button variant="ghost" size="icon">
-              <FoldHorizontal className="size-4" />
+              {textDirection === "ltr" && (
+                <ArrowBigRightDash className="size-4" />
+              )}
+              {textDirection === "rtl" && (
+                <ArrowBigLeftDash className="size-4" />
+              )}
+              {textDirection === "ttb-lr" && (
+                <ArrowBigDownDash className="size-4" />
+              )}
+              {textDirection === "ttb-rl" && (
+                <ArrowBigDownDash className="size-4" />
+              )}
             </Button>
-          </PopoverTrigger>
-          <PopoverContent align="start">
-            <div className="flex flex-col gap-2">
-              <ToolbarSlider
-                id="row-gap"
-                value={rowGap}
-                min={0}
-                max={40}
-                label="Row Gap"
-                onValueChange={(e) => setDocument({ rowGap: e })}
-              />
-              <ToolbarSlider
-                id="column-gap"
-                value={columnGap}
-                min={0}
-                max={40}
-                label="Column Gap"
-                onValueChange={(e) => setDocument({ columnGap: e })}
-              />
+          </SelectTrigger>
+          <SelectContent align="start">
+            <div className="flex flex-col text-xs">
+              <SelectItem value="ltr">Left to Right</SelectItem>
+              <SelectItem value="rtl">Right to Left</SelectItem>
+              <SelectItem value="ttb-lr">
+                Top to Bottom, Left to Right
+              </SelectItem>
+              <SelectItem value="ttb-rl">
+                Top to Bottom, Right to Left
+              </SelectItem>
             </div>
-          </PopoverContent>
-        </Popover>
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button variant="ghost" size="icon">
-              <Table2 className="size-4" />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent align="start">
-            <div className="flex flex-col gap-2">
-              <ToolbarSlider
-                id="margin-y"
-                value={marginY}
-                min={0}
-                max={150}
-                inc={10}
-                label="Horizontal Margin"
-                onValueChange={(e) => setDocument({ marginY: e })}
-              />
-              <ToolbarSlider
-                id="margin-x"
-                value={marginX}
-                min={0}
-                max={150}
-                inc={10}
-                label="Vertical Margin"
-                onValueChange={(e) => setDocument({ marginX: e })}
-              />
-            </div>
-          </PopoverContent>
-        </Popover>
+          </SelectContent>
+        </Select>
         <Select
           value={align}
           onValueChange={(e) =>

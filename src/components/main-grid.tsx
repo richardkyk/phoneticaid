@@ -20,69 +20,95 @@ export function MainGrid() {
 
   const align = useDocumentStore((state) => state.config.align);
   const layout = useDocumentStore((state) => state.config.layout);
+  const textDirection = useDocumentStore((state) => state.config.textDirection);
 
   const content = useDocumentStore((state) => state.content);
   const pageHeight = useDocumentStore((state) => state.config.pageHeight);
   const pageWidth = useDocumentStore((state) => state.config.pageWidth);
+
+  const textFlow =
+    textDirection === "ltr" || textDirection === "rtl"
+      ? "horizontal"
+      : "vertical";
+
+  const overflowDimension =
+    textFlow === "horizontal"
+      ? layout === "portrait"
+        ? pageHeight
+        : pageWidth
+      : layout === "portrait"
+        ? pageWidth
+        : pageHeight;
 
   return (
     <div
       className="mx-auto flex  flex-col items-center gap-8 print:gap-0"
       style={{ width: layout === "portrait" ? "210mm" : "297mm" }}
     >
-      {pageSlices(layout === "portrait" ? pageHeight : pageWidth).map(
-        (page, i) => (
-          <PrintablePage key={i} pageNum={i}>
-            <div
-              className="flex flex-col"
-              style={{
-                gap: `${rowGap}px`,
-              }}
-            >
-              {page.map((row) => (
-                <div
-                  key={row}
-                  className="flex"
-                  style={{
-                    gap: `${columnGap}px`,
-                    justifyContent: align,
-                  }}
-                >
-                  {Array(columnCount)
-                    .fill(0)
-                    .map((_, j) => (
-                      <div id={`${row}:${j}`} key={j} className="flex flex-col">
-                        <div
-                          contentEditable
-                          suppressContentEditableWarning
-                          className="flex w-full items-center justify-center border border-gray-100 border-b-transparent font-sans  hover:border-gray-500 hover:border-b-gray-500 print:border-transparent"
-                          style={{
-                            fontSize: `${secondaryTextSize}px`,
-                            height: `${secondaryTextSize}px`,
-                            marginBottom: `${offset}px`,
-                          }}
-                        >
-                          {content.get(`${row}:${j}`)?.pinyin}
-                        </div>
-
-                        <div
-                          className={`flex items-center justify-center border border-gray-100 border-t-transparent print:border-transparent ${font.className}`}
-                          style={{
-                            fontSize: `${mainTextSize}px`,
-                            height: `${mainTextSize}px`,
-                            width: `${mainTextSize}px`,
-                          }}
-                        >
-                          {content.get(`${row}:${j}`)?.value}
-                        </div>
+      {pageSlices(overflowDimension).map((page, i) => (
+        <PrintablePage key={i} pageNum={i}>
+          <div
+            className="flex"
+            style={{
+              gap: `${rowGap}px`,
+              justifyContent: align,
+              flexDirection:
+                textDirection === "ttb-lr"
+                  ? "row"
+                  : textDirection === "ttb-rl"
+                    ? "row-reverse"
+                    : "column",
+            }}
+          >
+            {page.map((row) => (
+              <div
+                key={row}
+                className="flex"
+                style={{
+                  gap: `${columnGap}px`,
+                  justifyContent: align,
+                  flexDirection:
+                    textFlow === "vertical"
+                      ? "column"
+                      : textDirection === "rtl"
+                        ? "row-reverse"
+                        : "row",
+                }}
+              >
+                {Array(columnCount)
+                  .fill(0)
+                  .map((_, j) => (
+                    <div id={`${row}:${j}`} key={j} className="flex flex-col">
+                      <div
+                        contentEditable
+                        suppressContentEditableWarning
+                        className="flex w-full items-center justify-center border border-gray-100 border-b-transparent font-sans  hover:border-gray-500 hover:border-b-gray-500 print:border-transparent"
+                        style={{
+                          fontSize: `${secondaryTextSize}px`,
+                          height: `${secondaryTextSize}px`,
+                          marginBottom: `${offset}px`,
+                        }}
+                      >
+                        {content.get(`${row}:${j}`)?.pinyin}
                       </div>
-                    ))}
-                </div>
-              ))}
-            </div>
-          </PrintablePage>
-        ),
-      )}
+
+                      <div
+                        className={`flex items-center justify-center border border-gray-100 border-t-transparent print:border-transparent ${font.className}`}
+                        style={{
+                          fontSize: `${mainTextSize}px`,
+                          height: `${mainTextSize}px`,
+                          width: `${mainTextSize}px`,
+                        }}
+                      >
+                        {content.get(`${row}:${j}`)?.value}
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            ))}
+          </div>
+        </PrintablePage>
+      ))}
     </div>
   );
 }
