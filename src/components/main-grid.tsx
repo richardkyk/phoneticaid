@@ -26,6 +26,9 @@ export function MainGrid() {
   const pageHeight = useDocumentStore((state) => state.config.pageHeight);
   const pageWidth = useDocumentStore((state) => state.config.pageWidth);
 
+  const marginX = useDocumentStore((state) => state.config.marginX);
+  const marginY = useDocumentStore((state) => state.config.marginY);
+
   const textFlow =
     textDirection === "ltr" || textDirection === "rtl"
       ? "horizontal"
@@ -46,7 +49,13 @@ export function MainGrid() {
       style={{ width: layout === "portrait" ? "210mm" : "297mm" }}
     >
       {pageSlices(overflowDimension).map((page, i) => (
-        <PrintablePage key={i} pageNum={i}>
+        <PrintablePage
+          key={i}
+          pageNum={i}
+          marginX={marginX}
+          marginY={marginY}
+          layout={layout}
+        >
           <div
             className="flex"
             style={{

@@ -20,7 +20,6 @@ import {
   Type,
 } from "lucide-react";
 import localFont from "next/font/local";
-import { useEffect } from "react";
 import { toast } from "sonner";
 import { symbols } from "~/lib/constants";
 import { useDocumentStore } from "~/lib/store";
@@ -44,7 +43,6 @@ export default function ToolBar() {
     (state) => state.config.secondaryTextSize,
   );
   const columnCount = useDocumentStore((state) => state.config.columnCount);
-  const rowCount = useDocumentStore((state) => state.config.rowCount);
   const columnGap = useDocumentStore((state) => state.config.columnGap);
   const rowGap = useDocumentStore((state) => state.config.rowGap);
   const offset = useDocumentStore((state) => state.config.offset);
@@ -64,11 +62,6 @@ export default function ToolBar() {
   async function handleProcessInput() {
     await generateGrid(userInput);
   }
-
-  useEffect(() => {
-    void generateGrid(userInput);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rowCount, columnCount]);
 
   return (
     <div className="fixed inset-x-0 top-0 z-10 h-[42px] w-full border-b bg-white py-2 print:hidden">

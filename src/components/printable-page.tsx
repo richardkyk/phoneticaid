@@ -1,16 +1,12 @@
-import { useDocumentStore } from "~/lib/store";
-
 interface PrintablePageProps {
   children: React.ReactNode;
   pageNum: number;
+  marginX: number;
+  marginY: number;
+  layout: "portrait" | "landscape";
 }
 export function PrintablePage(props: PrintablePageProps) {
-  const { children, pageNum } = props;
-
-  const marginX = useDocumentStore((state) => state.config.marginX);
-  const marginY = useDocumentStore((state) => state.config.marginY);
-
-  const layout = useDocumentStore((state) => state.config.layout);
+  const { children, pageNum, marginX, marginY, layout } = props;
 
   return (
     <div
