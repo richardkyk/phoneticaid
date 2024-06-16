@@ -95,6 +95,7 @@ export function MainGrid() {
                         style={{
                           fontSize: `${secondaryTextSize}px`,
                           height: `${secondaryTextSize}px`,
+                          lineHeight: `${secondaryTextSize}px`,
                           marginBottom: `${offset}px`,
                           borderWidth: secondaryTextSize <= 1 ? 0 : undefined,
                         }}
@@ -106,6 +107,7 @@ export function MainGrid() {
                         className={`flex items-center justify-center border border-gray-100 border-t-transparent print:border-transparent ${font.className}`}
                         style={{
                           fontSize: `${mainTextSize}px`,
+                          lineHeight: `${mainTextSize}px`,
                           height: `${mainTextSize}px`,
                           width: `${mainTextSize}px`,
                         }}
