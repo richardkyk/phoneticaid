@@ -96,6 +96,7 @@ export function MainGrid() {
                           fontSize: `${secondaryTextSize}px`,
                           height: `${secondaryTextSize}px`,
                           marginBottom: `${offset}px`,
+                          borderWidth: secondaryTextSize <= 1 ? 0 : undefined,
                         }}
                       >
                         {content.get(`${row}:${j}`)?.pinyin}

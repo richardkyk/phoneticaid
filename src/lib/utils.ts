@@ -63,9 +63,11 @@ export function pageSlices(availableSpace: number) {
   const textDirection = useDocumentStore.getState().config.textDirection;
 
   let sliceSize = 0;
+  console.log(textDirection, availableSpace);
   if (textDirection === "ltr" || textDirection === "rtl") {
     // for ltr and rtl
     const rowHeight = mainFontSize + secondaryFontSize + rowGap + offset;
+    console.log(rowHeight, mainFontSize, secondaryFontSize, rowGap, offset);
     const useableSpace = availableSpace - marginY * 2 + rowGap; // add the last rowGap since the last row doesn't need to space underneath it
     sliceSize = Math.floor(useableSpace / rowHeight);
   } else {
@@ -75,6 +77,7 @@ export function pageSlices(availableSpace: number) {
     const useableSpace = availableSpace - marginX * 2 + columnGap; // add the last rowGap since the last row doesn't need to space underneath it
     sliceSize = Math.floor(useableSpace / columnWidth);
   }
+  console.log(sliceSize);
 
   const rowArray = Array(rowCount)
     .fill(0)
