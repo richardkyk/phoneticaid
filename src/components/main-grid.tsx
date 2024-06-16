@@ -1,9 +1,13 @@
 "use client";
 
+import { PopoverTrigger } from "@radix-ui/react-popover";
+import { PaintBucket, RotateCw } from "lucide-react";
 import localFont from "next/font/local";
-import { useDocumentStore } from "~/lib/store";
+import { useDocumentStore, type CellState } from "~/lib/store";
 import { pageSlices } from "~/lib/utils";
 import { PrintablePage } from "./printable-page";
+import { Button } from "./ui/button";
+import { Popover, PopoverContent } from "./ui/popover";
 
 // Font files can be colocated inside of `pages`
 const font = localFont({ src: "../fonts/KaiTi2.ttf" });
@@ -28,6 +32,8 @@ export function MainGrid() {
 
   const marginX = useDocumentStore((state) => state.config.marginX);
   const marginY = useDocumentStore((state) => state.config.marginY);
+
+  const setCell = useDocumentStore((state) => state.setCell);
 
   const textFlow =
     textDirection === "ltr" || textDirection === "rtl"
@@ -103,17 +109,59 @@ export function MainGrid() {
                         {content.get(`${row}:${j}`)?.pinyin}
                       </div>
 
-                      <div
-                        className={`flex items-center justify-center border border-gray-100 border-t-transparent print:border-transparent ${font.className}`}
-                        style={{
-                          fontSize: `${mainTextSize}px`,
-                          lineHeight: `${mainTextSize}px`,
-                          height: `${mainTextSize}px`,
-                          width: `${mainTextSize}px`,
-                        }}
-                      >
-                        {content.get(`${row}:${j}`)?.value}
-                      </div>
+                      <Popover>
+                        <PopoverTrigger>
+                          <div
+                            className={`flex items-center justify-center border border-gray-100 border-t-transparent print:border-transparent ${font.className}`}
+                            style={{
+                              fontSize: `${mainTextSize}px`,
+                              lineHeight: `${mainTextSize}px`,
+                              height: `${mainTextSize}px`,
+                              width: `${mainTextSize}px`,
+                              rotate: content.get(`${row}:${j}`)?.rotate
+                                ? "90deg"
+                                : undefined,
+                              color: content.get(`${row}:${j}`)?.color,
+                            }}
+                          >
+                            {content.get(`${row}:${j}`)?.value}
+                          </div>
+                        </PopoverTrigger>
+                        <PopoverContent align="start">
+                          <div className="flex flex-col gap-2">
+                            <Button
+                              variant="secondary"
+                              onClick={() => {
+                                setCell(`${row}:${j}`, { rotate: true });
+                              }}
+                            >
+                              <RotateCw className="size-4" />
+                            </Button>
+                            <Button
+                              variant="secondary"
+                              onClick={() => {
+                                setCell(`${row}:${j}`, { color: "#ff0000" });
+                              }}
+                            >
+                              <PaintBucket className="size-4" />
+                            </Button>
+                            <Button
+                              variant="outline"
+                              onClick={() => {
+                                const cell = content.get(`${row}:${j}`);
+                                setCell(`${row}:${j}`, {
+                                  value: cell?.value ?? "",
+                                  pinyin: cell?.pinyin ?? "",
+                                  color: undefined,
+                                  rotate: undefined,
+                                } as CellState);
+                              }}
+                            >
+                              Clear
+                            </Button>
+                          </div>
+                        </PopoverContent>
+                      </Popover>
                     </div>
                   ))}
               </div>

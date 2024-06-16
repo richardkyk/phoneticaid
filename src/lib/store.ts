@@ -3,6 +3,8 @@ import { create } from "zustand";
 export interface CellState {
   value: string;
   pinyin: string;
+  color?: string;
+  rotate?: boolean;
 }
 interface DocumentState {
   config: {
@@ -26,7 +28,7 @@ interface DocumentState {
   userInput: string;
   setUserInput: (input: string) => void;
   setDocument: (config: Partial<DocumentState["config"]>) => void;
-  setCell: (key: string, value: CellState) => void;
+  setCell: (key: string, value: Partial<CellState>) => void;
   setContent: (content: Map<string, CellState>) => void;
 }
 
@@ -53,7 +55,14 @@ export const useDocumentStore = create<DocumentState>()((set) => ({
   setUserInput: (input) => set({ userInput: input }),
   setDocument: (config) =>
     set((state) => ({ config: { ...state.config, ...config } })),
-  setCell: (key: string, value: CellState) =>
-    set((state) => ({ content: new Map(state.content).set(key, value) })),
+  setCell: (key: string, value: Partial<CellState>) =>
+    set((state) => {
+      const prevValue = state.content.get(key);
+      if (!prevValue) return state;
+      const newContent = new Map(state.content);
+      newContent.set(key, { ...prevValue, ...value });
+
+      return { content: newContent };
+    }),
   setContent: (content) => set({ content }),
 }));
