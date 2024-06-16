@@ -24,9 +24,12 @@ export async function generateGrid(input: string) {
 
   for (const line of lines) {
     if (row === rowCount) setDocument({ rowCount: rowCount + 1 });
-    const simplifiedLine = zhconv(line, "zh-Hans");
+    const replacedLine = [...line]
+      .map((char) => (/\p{Script=Han}/u.test(char) ? char : " "))
+      .join("");
+    const simplifiedLine = zhconv(replacedLine, "zh-Hans");
 
-    const pinyinLine = pinyin(simplifiedLine === "" ? "" : simplifiedLine, {
+    const pinyinLine = pinyin(simplifiedLine, {
       type: "array",
     });
 

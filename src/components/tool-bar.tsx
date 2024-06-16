@@ -104,7 +104,7 @@ export default function ToolBar() {
             </div>
           </PopoverContent>
         </Popover>
-        <Separator orientation="vertical" className="h-4" />
+        <Separator orientation="vertical" className="h-6" />
         <Select
           value={layout}
           onValueChange={(e) =>
@@ -172,7 +172,7 @@ export default function ToolBar() {
             />
           </PopoverContent>
         </Popover>
-        <Separator orientation="vertical" className="h-4" />
+        <Separator orientation="vertical" className="h-6" />
         <Popover>
           <PopoverTrigger asChild>
             <Button variant="ghost" size="icon">
@@ -231,7 +231,7 @@ export default function ToolBar() {
             </div>
           </PopoverContent>
         </Popover>
-        <Separator orientation="vertical" className="h-4" />
+        <Separator orientation="vertical" className="h-6" />
 
         <Popover>
           <PopoverTrigger asChild>
@@ -329,6 +329,7 @@ export default function ToolBar() {
             </div>
           </SelectContent>
         </Select>
+        <Separator orientation="vertical" className="h-6" />
 
         <Button
           onClick={handleProcessInput}
