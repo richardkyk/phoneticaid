@@ -6,23 +6,24 @@ import {
   AlignJustify,
   AlignLeft,
   AlignRight,
+  Ampersand,
   ArrowBigDownDash,
   ArrowBigLeftDash,
   ArrowBigRightDash,
   ArrowDownToLine,
-  CaseSensitive,
+  Baseline,
+  BetweenHorizonalStart,
   Columns3,
-  FoldHorizontal,
-  Pi,
+  Languages,
   Proportions,
   Rows3,
-  Table2,
-  Type,
+  TextCursor,
+  UnfoldHorizontal,
   ZoomIn,
 } from "lucide-react";
 import localFont from "next/font/local";
-import { toast } from "sonner";
-import { symbols } from "~/lib/constants";
+import React, { useRef } from "react";
+import { punctuation, specialCharacters } from "~/lib/constants";
 import { useDocumentStore } from "~/lib/store";
 import { generateGrid } from "~/lib/utils";
 import { Button } from "./ui/button";
@@ -36,6 +37,7 @@ import { Textarea } from "./ui/textarea";
 const font = localFont({ src: "../fonts/KaiTi2.ttf" });
 
 export default function ToolBar() {
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const userInput = useDocumentStore((state) => state.userInput);
   const setUserInput = useDocumentStore((state) => state.setUserInput);
 
@@ -71,16 +73,35 @@ export default function ToolBar() {
         <Popover>
           <PopoverTrigger asChild>
             <Button variant="ghost" size="icon">
-              <Type className="size-4" />
+              <TextCursor className="size-4" />
             </Button>
           </PopoverTrigger>
           <PopoverContent className="h-[300px] w-[400px]" align="start">
-            <Textarea
-              value={userInput}
-              onChange={(e) => setUserInput(e.target.value)}
-              className="h-full w-full"
-              placeholder="Enter Chinese text here"
-            />
+            <div className="flex h-full w-full flex-col gap-2">
+              <Textarea
+                ref={textareaRef}
+                value={userInput}
+                onChange={(e) => setUserInput(e.target.value)}
+                onBlur={(e) => e.target.focus()}
+                className={`flex-1 ${font.className}`}
+                placeholder="Enter Chinese text here"
+              />
+
+              <div className="flex gap-2">
+                <CharacterPopover
+                  textareaRef={textareaRef}
+                  symbols={punctuation}
+                >
+                  <Ampersand className="size-4" />
+                </CharacterPopover>
+                <CharacterPopover
+                  textareaRef={textareaRef}
+                  symbols={specialCharacters}
+                >
+                  <Languages className="size-4" />
+                </CharacterPopover>
+              </div>
+            </div>
           </PopoverContent>
         </Popover>
         <Separator orientation="vertical" className="h-4" />
@@ -107,7 +128,7 @@ export default function ToolBar() {
         <Popover>
           <PopoverTrigger asChild>
             <Button variant="ghost" size="icon">
-              <Table2 className="size-4" />
+              <UnfoldHorizontal className="size-4" />
             </Button>
           </PopoverTrigger>
           <PopoverContent align="start">
@@ -176,7 +197,7 @@ export default function ToolBar() {
         <Popover>
           <PopoverTrigger asChild>
             <Button variant="ghost" size="icon">
-              <FoldHorizontal className="size-4" />
+              <BetweenHorizonalStart className="size-4" />
             </Button>
           </PopoverTrigger>
           <PopoverContent align="start">
@@ -215,7 +236,7 @@ export default function ToolBar() {
         <Popover>
           <PopoverTrigger asChild>
             <Button variant="ghost" size="icon">
-              <CaseSensitive className="size-4" />
+              <Baseline className="size-4" />
             </Button>
           </PopoverTrigger>
           <PopoverContent align="start">
@@ -309,32 +330,6 @@ export default function ToolBar() {
           </SelectContent>
         </Select>
 
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button variant="ghost" size="icon">
-              <Pi className="size-4" />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent align="start">
-            <div className="grid grid-cols-4 justify-center gap-1">
-              {symbols.map((symbol) => (
-                <Button
-                  variant="ghost"
-                  size="reset"
-                  key={symbol.value}
-                  className={`size-4 ${symbol.needsFont && font.className}`}
-                  onClick={async () => {
-                    await navigator.clipboard.writeText(symbol.value);
-                    toast.success("Copied to clipboard");
-                  }}
-                >
-                  {symbol.value}
-                </Button>
-              ))}
-            </div>
-          </PopoverContent>
-        </Popover>
-
         <Button
           onClick={handleProcessInput}
           size="reset"
@@ -387,5 +382,55 @@ function ToolbarSlider(props: ToolbarSliderProps) {
         aria-label="mainTextSize"
       />
     </div>
+  );
+}
+
+interface CharacterPopoverProps {
+  children: React.ReactNode;
+  symbols: string[];
+  textareaRef: React.RefObject<HTMLTextAreaElement>;
+}
+function CharacterPopover(props: CharacterPopoverProps) {
+  const { children, symbols, textareaRef } = props;
+
+  const userInput = useDocumentStore.getState().userInput;
+  const setUserInput = useDocumentStore.getState().setUserInput;
+
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button variant="ghost" size="icon">
+          {children}
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent align="start" onOpenAutoFocus={(e) => e.preventDefault()}>
+        <div className="grid grid-cols-4 justify-center gap-2">
+          {symbols.map((symbol) => (
+            <Button
+              variant="ghost"
+              size="reset"
+              key={symbol}
+              className={`size-4 ${font.className}`}
+              onClick={async () => {
+                if (!textareaRef.current) return;
+                const start = textareaRef.current.selectionStart;
+                const end = start + 1;
+
+                const nextValue =
+                  userInput.slice(0, start) + symbol + userInput.slice(start);
+                setUserInput(nextValue);
+                textareaRef.current.value = nextValue;
+                textareaRef.current.selectionStart = end;
+                textareaRef.current.selectionEnd = end;
+
+                await navigator.clipboard.writeText(symbol);
+              }}
+            >
+              {symbol}
+            </Button>
+          ))}
+        </div>
+      </PopoverContent>
+    </Popover>
   );
 }
