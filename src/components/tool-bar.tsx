@@ -18,6 +18,7 @@ import {
   Rows3,
   Table2,
   Type,
+  ZoomIn,
 } from "lucide-react";
 import localFont from "next/font/local";
 import { toast } from "sonner";
@@ -49,6 +50,7 @@ export default function ToolBar() {
   const align = useDocumentStore((state) => state.config.align);
   const layout = useDocumentStore((state) => state.config.layout);
   const textDirection = useDocumentStore((state) => state.config.textDirection);
+  const zoom = useDocumentStore((state) => state.config.zoom);
 
   const textFlow =
     textDirection === "ltr" || textDirection === "rtl"
@@ -129,6 +131,24 @@ export default function ToolBar() {
                 onValueChange={(e) => setDocument({ marginX: e })}
               />
             </div>
+          </PopoverContent>
+        </Popover>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant="ghost" size="icon">
+              <ZoomIn className="size-4" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent align="start">
+            <ToolbarSlider
+              id="zoom"
+              value={zoom}
+              min={0}
+              max={2}
+              inc={0.1}
+              label="Zoom"
+              onValueChange={(e) => setDocument({ zoom: e })}
+            />
           </PopoverContent>
         </Popover>
         <Separator orientation="vertical" className="h-4" />

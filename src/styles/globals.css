@@ -79,4 +79,7 @@
   @page {
     margin: 0;
   }
+  #printable {
+    zoom: 1 !important;
+  }
 }

@@ -20,6 +20,7 @@ interface DocumentState {
     align: "start" | "center" | "end" | "space-between";
     layout: "portrait" | "landscape";
     textDirection: "ltr" | "rtl" | "ttb-lr" | "ttb-rl";
+    zoom: number;
   };
   content: Map<string, CellState>;
   userInput: string;
@@ -45,6 +46,7 @@ export const useDocumentStore = create<DocumentState>()((set) => ({
     align: "start",
     layout: "portrait",
     textDirection: "ltr",
+    zoom: 1,
   },
   content: new Map(),
   userInput: "",
