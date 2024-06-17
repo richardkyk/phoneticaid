@@ -80,6 +80,6 @@
     margin: 0;
   }
   #printable {
-    zoom: 1 !important;
+    scale: 1 !important;
   }
 }

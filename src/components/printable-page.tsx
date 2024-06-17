@@ -20,7 +20,7 @@ export function PrintablePage(props: PrintablePageProps) {
         padding: `${marginY}px ${marginX}px`,
         height: layout === "portrait" ? "297mm" : "210mm",
         width: layout === "portrait" ? "210mm" : "297mm",
-        zoom,
+        scale: zoom,
       }}
     >
       {pageNum !== 0 && <div className="page-break-before"></div>}
