@@ -63,9 +63,6 @@ export default function ToolBar() {
   const marginY = useDocumentStore((state) => state.config.marginY);
 
   const setDocument = useDocumentStore((state) => state.setDocument);
-  async function handleProcessInput() {
-    await generateGrid(userInput);
-  }
 
   useEffect(() => {
     void generateGrid(userInput);
@@ -333,21 +330,9 @@ export default function ToolBar() {
             </div>
           </SelectContent>
         </Select>
-        <Separator orientation="vertical" className="h-6" />
 
-        <Button
-          onClick={handleProcessInput}
-          size="reset"
-          className="h-6 px-2 text-xs"
-        >
-          Generate
-        </Button>
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => window.print()}
-          className="ml-auto"
-        >
+        <Separator orientation="vertical" className="h-6" />
+        <Button variant="ghost" size="icon" onClick={() => window.print()}>
           <ArrowDownToLine className="size-4" />
         </Button>
       </div>
