@@ -168,7 +168,7 @@ export default function ToolBar() {
             <ToolbarSlider
               id="zoom"
               value={zoom}
-              min={0}
+              min={0.1}
               max={2}
               inc={0.1}
               label="Zoom"

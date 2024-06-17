@@ -79,7 +79,7 @@
   @page {
     margin: 0;
   }
-  #printable {
-    scale: 1 !important;
+  #main-grid {
+    transform: scale(1) !important;
   }
 }

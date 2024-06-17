@@ -1,5 +1,3 @@
-import { useDocumentStore } from "~/lib/store";
-
 interface PrintablePageProps {
   children: React.ReactNode;
   pageNum: number;
@@ -10,17 +8,13 @@ interface PrintablePageProps {
 export function PrintablePage(props: PrintablePageProps) {
   const { children, pageNum, marginX, marginY, layout } = props;
 
-  const zoom = useDocumentStore((state) => state.config.zoom);
-
   return (
     <div
-      id="printable"
       className="relative flex flex-col border"
       style={{
         padding: `${marginY}px ${marginX}px`,
         height: layout === "portrait" ? "297mm" : "210mm",
         width: layout === "portrait" ? "210mm" : "297mm",
-        scale: zoom,
       }}
     >
       {pageNum !== 0 && <div className="page-break-before"></div>}

@@ -29,6 +29,7 @@ export function MainGrid() {
   const content = useDocumentStore((state) => state.content);
   const pageHeight = useDocumentStore((state) => state.config.pageHeight);
   const pageWidth = useDocumentStore((state) => state.config.pageWidth);
+  const zoom = useDocumentStore((state) => state.config.zoom);
 
   const marginX = useDocumentStore((state) => state.config.marginX);
   const marginY = useDocumentStore((state) => state.config.marginY);
@@ -51,8 +52,12 @@ export function MainGrid() {
 
   return (
     <div
-      className="mx-auto flex flex-col items-center gap-8 print:gap-0"
-      style={{ width: layout === "portrait" ? "210mm" : "297mm" }}
+      id="main-grid"
+      className="mx-auto flex w-max flex-col gap-8 print:gap-0"
+      style={{
+        transform: `scale(${zoom})`,
+        transformOrigin: "0 0",
+      }}
     >
       {pageSlices(overflowDimension).map((page, i) => (
         <PrintablePage
