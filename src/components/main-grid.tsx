@@ -50,6 +50,8 @@ export function MainGrid() {
         ? pageWidth
         : pageHeight;
 
+  if (!useDocumentStore.persist.hasHydrated) return null;
+
   return (
     <div
       id="main-grid"

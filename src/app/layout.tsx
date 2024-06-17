@@ -18,8 +18,8 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${GeistSans.variable} text-gray-700`}>
       <body>
-        <ToolBar />
         <GetClientDimensions />
+        <ToolBar />
         <Toaster />
         {children}
       </body>
