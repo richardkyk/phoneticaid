@@ -53,7 +53,7 @@ export function MainGrid() {
   return (
     <div
       id="main-grid"
-      className="mx-auto flex w-max flex-col gap-8 print:gap-0"
+      className="mx-auto flex w-max flex-col gap-8 after:h-px after:w-[calc(100%+2rem)] after:content-[''] print:gap-0 print:after:h-0"
       style={{
         transform: `scale(${zoom})`,
         transformOrigin: "0 0",
