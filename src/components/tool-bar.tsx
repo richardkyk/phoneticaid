@@ -204,7 +204,7 @@ export default function ToolBar() {
             <div className="flex flex-col gap-2">
               <ToolbarSlider
                 id="row-gap"
-                value={rowGap}
+                value={textFlow === "horizontal" ? rowGap : columnGap}
                 min={0}
                 max={40}
                 label="Row Gap"
@@ -217,7 +217,7 @@ export default function ToolBar() {
               />
               <ToolbarSlider
                 id="column-gap"
-                value={columnGap}
+                value={textFlow === "horizontal" ? columnGap : rowGap}
                 min={0}
                 max={40}
                 label="Column Gap"

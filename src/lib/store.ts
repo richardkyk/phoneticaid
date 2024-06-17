@@ -5,6 +5,7 @@ export interface CellState {
   pinyin: string;
   color?: string;
   rotate?: boolean;
+  border?: boolean;
 }
 interface DocumentState {
   config: {

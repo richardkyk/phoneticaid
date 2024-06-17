@@ -1,7 +1,7 @@
 "use client";
 
 import { PopoverTrigger } from "@radix-ui/react-popover";
-import { PaintBucket, RotateCw } from "lucide-react";
+import { BoxSelect, PaintBucket, RotateCw } from "lucide-react";
 import localFont from "next/font/local";
 import { useDocumentStore, type CellState } from "~/lib/store";
 import { pageSlices } from "~/lib/utils";
@@ -122,6 +122,9 @@ export function MainGrid() {
                                 ? "90deg"
                                 : undefined,
                               color: content.get(`${row}:${j}`)?.color,
+                              borderLeft: content.get(`${row}:${j}`)?.border
+                                ? "1px solid"
+                                : undefined,
                             }}
                           >
                             {content.get(`${row}:${j}`)?.value}
@@ -140,6 +143,14 @@ export function MainGrid() {
                             <Button
                               variant="secondary"
                               onClick={() => {
+                                setCell(`${row}:${j}`, { border: true });
+                              }}
+                            >
+                              <BoxSelect className="size-4" />
+                            </Button>
+                            <Button
+                              variant="secondary"
+                              onClick={() => {
                                 setCell(`${row}:${j}`, { color: "#ff0000" });
                               }}
                             >
@@ -154,6 +165,7 @@ export function MainGrid() {
                                   pinyin: cell?.pinyin ?? "",
                                   color: undefined,
                                   rotate: undefined,
+                                  border: undefined,
                                 } as CellState);
                               }}
                             >
