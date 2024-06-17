@@ -37,6 +37,7 @@ export function MainGrid() {
   const marginY = useDocumentStore((state) => state.config.marginY);
 
   const setCell = useDocumentStore((state) => state.setCell);
+  const setMod = useDocumentStore((state) => state.setMod);
 
   const textFlow =
     textDirection === "ltr" || textDirection === "rtl"
@@ -145,17 +146,29 @@ export function MainGrid() {
                         <div className="flex flex-col gap-2">
                           <Input
                             value={content.get(`${row}:${j}`)?.pinyin ?? ""}
-                            onChange={(e) =>
-                              setCell(`${row}:${j}`, { pinyin: e.target.value })
-                            }
+                            onChange={(e) => {
+                              const cell = content.get(`${row}:${j}`);
+                              if (!cell) return;
+
+                              setCell(`${row}:${j}`, {
+                                pinyin: e.target.value,
+                              });
+                              setMod(cell.id, {
+                                ...cell,
+                                pinyin: e.target.value,
+                              });
+                            }}
                           />
 
                           <RadioGroup
                             className="flex justify-between gap-2 rounded-md border p-2"
                             value={content.get(`${row}:${j}`)?.color ?? ""}
-                            onValueChange={(e) =>
-                              setCell(`${row}:${j}`, { color: e })
-                            }
+                            onValueChange={(e) => {
+                              const cell = content.get(`${row}:${j}`);
+                              if (!cell) return;
+                              setCell(`${row}:${j}`, { color: e });
+                              setMod(cell.id, { ...cell, color: e });
+                            }}
                           >
                             {[
                               "red",
@@ -183,7 +196,11 @@ export function MainGrid() {
                               size="reset"
                               className="p-1"
                               onClick={() => {
+                                const cell = content.get(`${row}:${j}`);
+                                if (!cell) return;
+
                                 setCell(`${row}:${j}`, { rotate: true });
+                                setMod(cell.id, { ...cell, rotate: true });
                               }}
                             >
                               <RotateCw className="size-4" />
@@ -193,7 +210,11 @@ export function MainGrid() {
                               className="p-1"
                               size="reset"
                               onClick={() => {
+                                const cell = content.get(`${row}:${j}`);
+                                if (!cell) return;
+
                                 setCell(`${row}:${j}`, { border: true });
+                                setMod(cell.id, { ...cell, border: true });
                               }}
                             >
                               <BoxSelect className="size-4" />
@@ -204,13 +225,15 @@ export function MainGrid() {
                             variant="outline"
                             onClick={() => {
                               const cell = content.get(`${row}:${j}`);
+                              if (!cell) return;
                               setCell(`${row}:${j}`, {
-                                value: cell?.value ?? "",
-                                pinyin: cell?.pinyin ?? "",
+                                value: cell.value,
+                                pinyin: cell.pinyin,
                                 color: undefined,
                                 rotate: undefined,
                                 border: undefined,
                               } as CellState);
+                              setMod(cell.id, null);
                             }}
                           >
                             Clear

@@ -15,10 +15,13 @@ export async function generateGrid(input: string) {
   const setContent = useDocumentStore.getState().setContent;
   const setDocument = useDocumentStore.getState().setDocument;
 
+  const mods = useDocumentStore.getState().mods;
+
   const nextMap = new Map<string, CellState>();
 
   let row = 0;
   let col = 0;
+  let id = 0;
 
   const lines = input.split("\n");
 
@@ -35,15 +38,20 @@ export async function generateGrid(input: string) {
 
     const lineArr = [...line];
     for (const [i, char] of lineArr.entries()) {
+      const _id = `${id}`;
+      const mod = mods.get(_id);
       const _py = pinyinLine[i] ?? "";
       const py = char === "" ? "mǔ" : _py;
 
-      nextMap.set(`${row}:${col}`, { value: char, pinyin: py });
+      if (mod && mod.value === char) nextMap.set(`${row}:${col}`, { ...mod });
+      else nextMap.set(`${row}:${col}`, { id: _id, value: char, pinyin: py });
       col = (col + 1) % columnCount;
       const endOfLine = i === lineArr.length - 1;
       const endOfRow = (i + 1) % columnCount === 0;
       if (endOfRow && !endOfLine) row++;
+      id++;
     }
+    id++; // increment the id for newline characters
     col = 0;
     row++;
   }

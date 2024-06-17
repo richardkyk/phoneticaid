@@ -63,6 +63,7 @@ export default function ToolBar() {
   const marginY = useDocumentStore((state) => state.config.marginY);
 
   const setDocument = useDocumentStore((state) => state.setDocument);
+  const rebaseMod = useDocumentStore((state) => state.rebaseMod);
 
   useEffect(() => {
     void generateGrid(userInput);
@@ -82,7 +83,18 @@ export default function ToolBar() {
               <Textarea
                 ref={textareaRef}
                 value={userInput}
-                onChange={(e) => setUserInput(e.target.value)}
+                onChange={(e) => {
+                  const prev = userInput;
+                  const prevLength = prev.length;
+                  const nextLength = e.target.value.length;
+
+                  const change = nextLength - prevLength;
+                  const end = e.target.selectionEnd;
+
+                  const pos = change > 0 ? end - change : end;
+                  rebaseMod(pos, change);
+                  setUserInput(e.target.value);
+                }}
                 onBlur={(e) => e.target.focus()}
                 className={`flex-1 ${font.className}`}
                 placeholder="Enter Chinese text here"

@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { persist, type StorageValue } from "zustand/middleware";
 
 export interface CellState {
+  id: string;
   value: string;
   pinyin: string;
   color?: string;
@@ -27,11 +28,14 @@ interface DocumentState {
     zoom: number;
   };
   content: Map<string, CellState>;
+  mods: Map<string, CellState>;
   userInput: string;
   setUserInput: (input: string) => void;
   setDocument: (config: Partial<DocumentState["config"]>) => void;
   setCell: (key: string, value: Partial<CellState>) => void;
   setContent: (content: Map<string, CellState>) => void;
+  setMod: (key: string, value: CellState | null) => void;
+  rebaseMod: (start: number, offset: number) => void;
 }
 
 export const useDocumentStore = create<DocumentState>()(
@@ -55,6 +59,7 @@ export const useDocumentStore = create<DocumentState>()(
         zoom: 1,
       },
       content: new Map(),
+      mods: new Map(),
       userInput: "",
       setUserInput: (input) => set({ userInput: input }),
       setDocument: (config) =>
@@ -69,6 +74,27 @@ export const useDocumentStore = create<DocumentState>()(
           return { content: newContent };
         }),
       setContent: (content) => set({ content }),
+      setMod: (key: string, value: CellState | null) =>
+        set((state) => {
+          const newMods = new Map(state.mods);
+          if (value === null) newMods.delete(key);
+          if (value) newMods.set(key, { ...value });
+          return { mods: newMods };
+        }),
+      rebaseMod: (start, offset) =>
+        set((state) => {
+          const newMods = new Map();
+          for (const [key, value] of state.mods.entries()) {
+            if (parseInt(key) < start) {
+              newMods.set(key, value);
+              continue;
+            }
+            const newValue = { ...value };
+            newValue.id = `${parseInt(key) + offset}`;
+            newMods.set(newValue.id, newValue);
+          }
+          return { mods: newMods };
+        }),
     }),
     {
       name: "phoneticaid-store",
@@ -82,6 +108,7 @@ export const useDocumentStore = create<DocumentState>()(
             state: {
               ...state,
               content: new Map(state.content),
+              mods: new Map(state.mods),
             },
           };
         },
@@ -91,6 +118,7 @@ export const useDocumentStore = create<DocumentState>()(
             state: {
               ...newValue.state,
               content: Array.from(newValue.state.content.entries()),
+              mods: Array.from(newValue.state.mods.entries()),
             },
           });
           localStorage.setItem(name, str);
