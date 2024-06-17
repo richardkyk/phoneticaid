@@ -1,13 +1,15 @@
 "use client";
 
 import { PopoverTrigger } from "@radix-ui/react-popover";
-import { BoxSelect, PaintBucket, RotateCw } from "lucide-react";
+import { BoxSelect, RotateCw } from "lucide-react";
 import localFont from "next/font/local";
 import { useDocumentStore, type CellState } from "~/lib/store";
 import { pageSlices } from "~/lib/utils";
 import { PrintablePage } from "./printable-page";
 import { Button } from "./ui/button";
+import { Input } from "./ui/input";
 import { Popover, PopoverContent } from "./ui/popover";
+import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 
 // Font files can be colocated inside of `pages`
 const font = localFont({ src: "../fonts/KaiTi2.ttf" });
@@ -100,26 +102,30 @@ export function MainGrid() {
                 {Array(columnCount)
                   .fill(0)
                   .map((_, j) => (
-                    <div id={`${row}:${j}`} key={j} className="flex flex-col">
-                      <div
-                        contentEditable
-                        suppressContentEditableWarning
-                        className="flex w-full items-center justify-center border border-gray-100 border-b-transparent font-sans  hover:border-gray-500 hover:border-b-gray-500 print:border-transparent"
-                        style={{
-                          fontSize: `${secondaryTextSize}px`,
-                          height: `${secondaryTextSize}px`,
-                          lineHeight: `${secondaryTextSize}px`,
-                          marginBottom: `${offset}px`,
-                          borderWidth: secondaryTextSize <= 1 ? 0 : undefined,
-                        }}
-                      >
-                        {content.get(`${row}:${j}`)?.pinyin}
-                      </div>
-
-                      <Popover>
-                        <PopoverTrigger>
+                    <Popover key={`${row}:${j}`}>
+                      <PopoverTrigger>
+                        <div
+                          id={`${row}:${j}`}
+                          className="flex flex-col border border-gray-100 hover:border-gray-500 print:border-transparent"
+                          style={{
+                            borderLeft: content.get(`${row}:${j}`)?.border
+                              ? "1px solid"
+                              : undefined,
+                          }}
+                        >
                           <div
-                            className={`flex items-center justify-center border border-gray-100 border-t-transparent print:border-transparent ${font.className}`}
+                            className="flex w-full items-center justify-center font-sans"
+                            style={{
+                              fontSize: `${secondaryTextSize}px`,
+                              height: `${secondaryTextSize}px`,
+                              lineHeight: `${secondaryTextSize}px`,
+                              marginBottom: `${offset}px`,
+                            }}
+                          >
+                            {content.get(`${row}:${j}`)?.pinyin}
+                          </div>
+                          <div
+                            className={`flex items-center justify-center ${font.className}`}
                             style={{
                               fontSize: `${mainTextSize}px`,
                               lineHeight: `${mainTextSize}px`,
@@ -129,18 +135,53 @@ export function MainGrid() {
                                 ? "90deg"
                                 : undefined,
                               color: content.get(`${row}:${j}`)?.color,
-                              borderLeft: content.get(`${row}:${j}`)?.border
-                                ? "1px solid"
-                                : undefined,
                             }}
                           >
                             {content.get(`${row}:${j}`)?.value}
                           </div>
-                        </PopoverTrigger>
-                        <PopoverContent align="start">
-                          <div className="flex flex-col gap-2">
+                        </div>
+                      </PopoverTrigger>
+                      <PopoverContent align="start">
+                        <div className="flex flex-col gap-2">
+                          <Input
+                            value={content.get(`${row}:${j}`)?.pinyin ?? ""}
+                            onChange={(e) =>
+                              setCell(`${row}:${j}`, { pinyin: e.target.value })
+                            }
+                          />
+
+                          <RadioGroup
+                            className="flex justify-between gap-2 rounded-md border p-2"
+                            value={content.get(`${row}:${j}`)?.color ?? ""}
+                            onValueChange={(e) =>
+                              setCell(`${row}:${j}`, { color: e })
+                            }
+                          >
+                            {[
+                              "red",
+                              "yellow",
+                              "green",
+                              "blue",
+                              "purple",
+                              "pink",
+                              "aqua",
+                            ].map((color) => (
+                              <RadioGroupItem
+                                key={color}
+                                value={color}
+                                style={{
+                                  backgroundColor: color,
+                                  border: "transparent",
+                                  color: "white",
+                                }}
+                              />
+                            ))}
+                          </RadioGroup>
+                          <div className="flex gap-2">
                             <Button
                               variant="secondary"
+                              size="reset"
+                              className="p-1"
                               onClick={() => {
                                 setCell(`${row}:${j}`, { rotate: true });
                               }}
@@ -149,39 +190,34 @@ export function MainGrid() {
                             </Button>
                             <Button
                               variant="secondary"
+                              className="p-1"
+                              size="reset"
                               onClick={() => {
                                 setCell(`${row}:${j}`, { border: true });
                               }}
                             >
                               <BoxSelect className="size-4" />
                             </Button>
-                            <Button
-                              variant="secondary"
-                              onClick={() => {
-                                setCell(`${row}:${j}`, { color: "#ff0000" });
-                              }}
-                            >
-                              <PaintBucket className="size-4" />
-                            </Button>
-                            <Button
-                              variant="outline"
-                              onClick={() => {
-                                const cell = content.get(`${row}:${j}`);
-                                setCell(`${row}:${j}`, {
-                                  value: cell?.value ?? "",
-                                  pinyin: cell?.pinyin ?? "",
-                                  color: undefined,
-                                  rotate: undefined,
-                                  border: undefined,
-                                } as CellState);
-                              }}
-                            >
-                              Clear
-                            </Button>
                           </div>
-                        </PopoverContent>
-                      </Popover>
-                    </div>
+
+                          <Button
+                            variant="outline"
+                            onClick={() => {
+                              const cell = content.get(`${row}:${j}`);
+                              setCell(`${row}:${j}`, {
+                                value: cell?.value ?? "",
+                                pinyin: cell?.pinyin ?? "",
+                                color: undefined,
+                                rotate: undefined,
+                                border: undefined,
+                              } as CellState);
+                            }}
+                          >
+                            Clear
+                          </Button>
+                        </div>
+                      </PopoverContent>
+                    </Popover>
                   ))}
               </div>
             ))}
