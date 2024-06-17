@@ -22,7 +22,7 @@ import {
   ZoomIn,
 } from "lucide-react";
 import localFont from "next/font/local";
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { punctuation, specialCharacters } from "~/lib/constants";
 import { useDocumentStore } from "~/lib/store";
 import { generateGrid } from "~/lib/utils";
@@ -66,6 +66,10 @@ export default function ToolBar() {
   async function handleProcessInput() {
     await generateGrid(userInput);
   }
+
+  useEffect(() => {
+    void generateGrid(userInput);
+  }, [columnCount, userInput]);
 
   return (
     <div className="fixed inset-x-0 top-0 z-10 h-[42px] w-full border-b bg-white py-2 print:hidden">
