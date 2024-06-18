@@ -105,15 +105,7 @@ export function MainGrid() {
                   .map((_, j) => (
                     <Popover key={`${row}:${j}`}>
                       <PopoverTrigger>
-                        <div
-                          id={`${row}:${j}`}
-                          className="flex flex-col border border-gray-100 hover:border-gray-500 print:border-transparent"
-                          style={{
-                            borderLeft: content.get(`${row}:${j}`)?.border
-                              ? "1px solid"
-                              : undefined,
-                          }}
-                        >
+                        <div id={`${row}:${j}`} className="flex flex-col">
                           <div
                             className="flex w-full items-center justify-center font-sans"
                             style={{
@@ -126,7 +118,7 @@ export function MainGrid() {
                             {content.get(`${row}:${j}`)?.pinyin}
                           </div>
                           <div
-                            className={`flex items-center justify-center ${font.className}`}
+                            className={`flex items-center justify-center ${font.className} border border-gray-100 hover:border-gray-500 print:border-transparent`}
                             style={{
                               fontSize: `${mainTextSize}px`,
                               lineHeight: `${mainTextSize}px`,
@@ -136,6 +128,9 @@ export function MainGrid() {
                                 ? "90deg"
                                 : undefined,
                               color: content.get(`${row}:${j}`)?.color,
+                              borderLeft: content.get(`${row}:${j}`)?.border
+                                ? "1px solid"
+                                : undefined,
                             }}
                           >
                             {content.get(`${row}:${j}`)?.value}

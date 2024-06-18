@@ -74,16 +74,17 @@ export function pageSlices(availableSpace: number) {
   const textDirection = useDocumentStore.getState().config.textDirection;
 
   let sliceSize = 0;
+  const borderWidth = 1.6;
   if (textDirection === "ltr" || textDirection === "rtl") {
     // for ltr and rtl
     const rowHeight = mainFontSize + secondaryFontSize + rowGap + offset;
-    const useableSpace = availableSpace - marginY * 2 + rowGap; // add the last rowGap since the last row doesn't need to space underneath it
+    const useableSpace = availableSpace - marginY * 2 + rowGap - borderWidth; // add the last rowGap since the last row doesn't need to space underneath it
     sliceSize = Math.floor(useableSpace / rowHeight);
   } else {
     // for ttb-lr and ttb-rl
     const columnGap = rowGap; // this is swapped since we we have changed the flex directions
     const columnWidth = mainFontSize + columnGap;
-    const useableSpace = availableSpace - marginX * 2 + columnGap; // add the last rowGap since the last row doesn't need to space underneath it
+    const useableSpace = availableSpace - marginX * 2 + columnGap - borderWidth; // add the last rowGap since the last row doesn't need to space underneath it
     sliceSize = Math.floor(useableSpace / columnWidth);
   }
 
