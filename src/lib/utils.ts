@@ -68,6 +68,7 @@ export async function generateGrid(input: string) {
 }
 
 export function pageSlices(availableSpace: number) {
+  console.log("calculating page slices");
   if (availableSpace === 0) return [];
   const rowCount = useDocumentStore.getState().config.rowCount;
 
@@ -79,6 +80,8 @@ export function pageSlices(availableSpace: number) {
   const marginY = useDocumentStore.getState().config.marginY;
   const marginX = useDocumentStore.getState().config.marginX;
   const textDirection = useDocumentStore.getState().config.textDirection;
+
+  const setDocument = useDocumentStore.getState().setDocument;
 
   let sliceSize = 0;
   const borderWidth = 1.6;
@@ -94,6 +97,8 @@ export function pageSlices(availableSpace: number) {
     const useableSpace = availableSpace - marginX * 2 + columnGap - borderWidth; // add the last rowGap since the last row doesn't need to space underneath it
     sliceSize = Math.floor(useableSpace / columnWidth);
   }
+
+  setDocument({ sliceSize });
 
   const rowArray = Array(rowCount)
     .fill(0)

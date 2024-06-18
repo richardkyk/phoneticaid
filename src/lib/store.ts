@@ -13,6 +13,7 @@ export interface CellState {
 }
 interface DocumentState {
   config: {
+    sliceSize: number;
     rowCount: number;
     rowGap: number;
     columnCount: number;
@@ -27,6 +28,7 @@ interface DocumentState {
     align: "start" | "center" | "end" | "space-between";
     layout: "portrait" | "landscape";
     textDirection: "ltr" | "rtl" | "ttb-lr" | "ttb-rl";
+    textFlow: "horizontal" | "vertical";
     zoom: number;
   };
   content: Map<string, CellState>;
@@ -44,6 +46,7 @@ export const useDocumentStore = create<DocumentState>()(
   persist(
     (set) => ({
       config: {
+        sliceSize: 15,
         rowCount: 10,
         rowGap: 12,
         columnCount: 16,
@@ -58,6 +61,7 @@ export const useDocumentStore = create<DocumentState>()(
         align: "start",
         layout: "portrait",
         textDirection: "ltr",
+        textFlow: "horizontal",
         zoom: 1,
       },
       content: new Map(),

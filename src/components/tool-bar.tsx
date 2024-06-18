@@ -285,6 +285,7 @@ export default function ToolBar() {
           onValueChange={(e) =>
             setDocument({
               textDirection: e as "ltr" | "rtl" | "ttb-lr" | "ttb-rl",
+              textFlow: e === "ltr" || e === "rtl" ? "horizontal" : "vertical",
             })
           }
         >

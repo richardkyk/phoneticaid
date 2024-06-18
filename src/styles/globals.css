@@ -79,7 +79,7 @@
   @page {
     margin: 0;
   }
-  #main-grid {
+  #scaled-document {
     transform: scale(1) !important;
   }
 }
