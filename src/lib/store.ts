@@ -5,6 +5,7 @@ export interface CellState {
   id: string;
   value: string;
   pinyin: string;
+  pinyin2?: string;
   color?: string;
   rotate?: boolean;
   border?: boolean;

@@ -114,7 +114,7 @@ export function MainGrid() {
                   .fill(0)
                   .map((_, j) => (
                     <Popover key={`${row}:${j}`}>
-                      <PopoverTrigger>
+                      <PopoverTrigger className="data-[state=open]:outline data-[state=open]:outline-red-500">
                         <div id={`${row}:${j}`} className="flex flex-col">
                           <div
                             className="flex w-full items-center justify-center font-sans"
@@ -125,7 +125,8 @@ export function MainGrid() {
                               marginBottom: `${offset}px`,
                             }}
                           >
-                            {content.get(`${row}:${j}`)?.pinyin}
+                            {content.get(`${row}:${j}`)?.pinyin2 ??
+                              content.get(`${row}:${j}`)?.pinyin}
                           </div>
                           <div
                             className={`flex items-center justify-center ${font.className} border border-gray-100 hover:border-gray-500 print:border-transparent`}
@@ -151,17 +152,21 @@ export function MainGrid() {
                         <div className="flex flex-col gap-2">
                           <div className="flex gap-2">
                             <Input
-                              value={content.get(`${row}:${j}`)?.pinyin ?? ""}
+                              value={
+                                content.get(`${row}:${j}`)?.pinyin2 ??
+                                content.get(`${row}:${j}`)?.pinyin ??
+                                ""
+                              }
                               onChange={(e) => {
                                 const cell = content.get(`${row}:${j}`);
                                 if (!cell) return;
 
                                 setCell(`${row}:${j}`, {
-                                  pinyin: e.target.value,
+                                  pinyin2: e.target.value,
                                 });
                                 setMod(cell.id, {
                                   ...cell,
-                                  pinyin: e.target.value,
+                                  pinyin2: e.target.value,
                                 });
                               }}
                             />
@@ -195,11 +200,11 @@ export function MainGrid() {
                                           if (!cell) return;
 
                                           setCell(`${row}:${j}`, {
-                                            pinyin: option,
+                                            pinyin2: option,
                                           });
                                           setMod(cell.id, {
                                             ...cell,
-                                            pinyin: option,
+                                            pinyin2: option,
                                           });
                                         }}
                                       >
@@ -301,6 +306,7 @@ export function MainGrid() {
                                 setCell(`${row}:${j}`, {
                                   value: cell.value,
                                   pinyin: cell.pinyin,
+                                  pinyin2: undefined,
                                   color: undefined,
                                   rotate: undefined,
                                   border: undefined,
