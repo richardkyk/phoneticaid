@@ -1,15 +1,25 @@
 "use client";
 
 import { PopoverTrigger } from "@radix-ui/react-popover";
-import { BoxSelect, RotateCw } from "lucide-react";
+import {
+  BoxSelect,
+  CircleX,
+  Ellipsis,
+  PaintBucket,
+  RotateCw,
+} from "lucide-react";
 import localFont from "next/font/local";
 import { useDocumentStore, type CellState } from "~/lib/store";
 import { pageSlices } from "~/lib/utils";
 import { PrintablePage } from "./printable-page";
 import { Button } from "./ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
 import { Input } from "./ui/input";
 import { Popover, PopoverContent } from "./ui/popover";
-import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 
 // Font files can be colocated inside of `pages`
 const font = localFont({ src: "../fonts/KaiTi2.ttf" });
@@ -137,59 +147,126 @@ export function MainGrid() {
                           </div>
                         </div>
                       </PopoverTrigger>
-                      <PopoverContent align="start">
+                      <PopoverContent align="start" side="right">
                         <div className="flex flex-col gap-2">
-                          <Input
-                            value={content.get(`${row}:${j}`)?.pinyin ?? ""}
-                            onChange={(e) => {
-                              const cell = content.get(`${row}:${j}`);
-                              if (!cell) return;
-
-                              setCell(`${row}:${j}`, {
-                                pinyin: e.target.value,
-                              });
-                              setMod(cell.id, {
-                                ...cell,
-                                pinyin: e.target.value,
-                              });
-                            }}
-                          />
-
-                          <RadioGroup
-                            className="flex justify-between gap-2 rounded-md border p-2"
-                            value={content.get(`${row}:${j}`)?.color ?? ""}
-                            onValueChange={(e) => {
-                              const cell = content.get(`${row}:${j}`);
-                              if (!cell) return;
-                              setCell(`${row}:${j}`, { color: e });
-                              setMod(cell.id, { ...cell, color: e });
-                            }}
-                          >
-                            {[
-                              "red",
-                              "yellow",
-                              "green",
-                              "blue",
-                              "purple",
-                              "pink",
-                              "aqua",
-                            ].map((color) => (
-                              <RadioGroupItem
-                                key={color}
-                                value={color}
-                                style={{
-                                  backgroundColor: color,
-                                  border: "transparent",
-                                  color: "white",
-                                }}
-                              />
-                            ))}
-                          </RadioGroup>
                           <div className="flex gap-2">
+                            <Input
+                              value={content.get(`${row}:${j}`)?.pinyin ?? ""}
+                              onChange={(e) => {
+                                const cell = content.get(`${row}:${j}`);
+                                if (!cell) return;
+
+                                setCell(`${row}:${j}`, {
+                                  pinyin: e.target.value,
+                                });
+                                setMod(cell.id, {
+                                  ...cell,
+                                  pinyin: e.target.value,
+                                });
+                              }}
+                            />
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button
+                                  variant="outline"
+                                  size="reset"
+                                  className="size-8 shrink-0"
+                                >
+                                  <Ellipsis className="size-4" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent
+                                align="start"
+                                className="min-w-[2rem]"
+                              >
+                                <div className="flex flex-col gap-2">
+                                  {content
+                                    .get(`${row}:${j}`)
+                                    ?.options?.map((option) => (
+                                      <Button
+                                        variant="ghost"
+                                        size="reset"
+                                        className="px-2 py-1"
+                                        key={option}
+                                        onClick={() => {
+                                          const cell = content.get(
+                                            `${row}:${j}`,
+                                          );
+                                          if (!cell) return;
+
+                                          setCell(`${row}:${j}`, {
+                                            pinyin: option,
+                                          });
+                                          setMod(cell.id, {
+                                            ...cell,
+                                            pinyin: option,
+                                          });
+                                        }}
+                                      >
+                                        {option}
+                                      </Button>
+                                    ))}
+                                </div>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </div>
+
+                          <div className="flex gap-2">
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button
+                                  variant="outline"
+                                  size="reset"
+                                  className="size-8 shrink-0"
+                                >
+                                  <PaintBucket className="size-4" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent
+                                align="start"
+                                className="min-w-[2rem]"
+                              >
+                                <div className="flex flex-col gap-2">
+                                  {[
+                                    "red",
+                                    "yellow",
+                                    "green",
+                                    "blue",
+                                    "purple",
+                                    "pink",
+                                    "aqua",
+                                  ].map((color) => (
+                                    <Button
+                                      variant="ghost"
+                                      size="reset"
+                                      className="px-2 py-1"
+                                      key={color}
+                                      onClick={() => {
+                                        const cell = content.get(`${row}:${j}`);
+                                        if (!cell) return;
+
+                                        setCell(`${row}:${j}`, {
+                                          color,
+                                        });
+                                        setMod(cell.id, {
+                                          ...cell,
+                                          color,
+                                        });
+                                      }}
+                                    >
+                                      <div
+                                        className="size-4 rounded-full"
+                                        style={{ backgroundColor: color }}
+                                      ></div>
+                                    </Button>
+                                  ))}
+                                </div>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
                             <Button
-                              variant="secondary"
+                              variant="outline"
                               size="reset"
-                              className="p-1"
+                              className="size-8"
                               onClick={() => {
                                 const cell = content.get(`${row}:${j}`);
                                 if (!cell) return;
@@ -201,8 +278,8 @@ export function MainGrid() {
                               <RotateCw className="size-4" />
                             </Button>
                             <Button
-                              variant="secondary"
-                              className="p-1"
+                              variant="outline"
+                              className="size-8"
                               size="reset"
                               onClick={() => {
                                 const cell = content.get(`${row}:${j}`);
@@ -214,25 +291,26 @@ export function MainGrid() {
                             >
                               <BoxSelect className="size-4" />
                             </Button>
+                            <Button
+                              variant="outline"
+                              className="ml-auto size-8"
+                              size="reset"
+                              onClick={() => {
+                                const cell = content.get(`${row}:${j}`);
+                                if (!cell) return;
+                                setCell(`${row}:${j}`, {
+                                  value: cell.value,
+                                  pinyin: cell.pinyin,
+                                  color: undefined,
+                                  rotate: undefined,
+                                  border: undefined,
+                                } as CellState);
+                                setMod(cell.id, null);
+                              }}
+                            >
+                              <CircleX className="size-4" />
+                            </Button>
                           </div>
-
-                          <Button
-                            variant="outline"
-                            onClick={() => {
-                              const cell = content.get(`${row}:${j}`);
-                              if (!cell) return;
-                              setCell(`${row}:${j}`, {
-                                value: cell.value,
-                                pinyin: cell.pinyin,
-                                color: undefined,
-                                rotate: undefined,
-                                border: undefined,
-                              } as CellState);
-                              setMod(cell.id, null);
-                            }}
-                          >
-                            Clear
-                          </Button>
                         </div>
                       </PopoverContent>
                     </Popover>

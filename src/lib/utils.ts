@@ -42,9 +42,16 @@ export async function generateGrid(input: string) {
       const mod = mods.get(_id);
       const _py = pinyinLine[i] ?? "";
       const py = char === "" ? "mǔ" : _py;
+      const options = pinyin(char, { type: "array", multiple: true });
 
       if (mod && mod.value === char) nextMap.set(`${row}:${col}`, { ...mod });
-      else nextMap.set(`${row}:${col}`, { id: _id, value: char, pinyin: py });
+      else
+        nextMap.set(`${row}:${col}`, {
+          id: _id,
+          value: char,
+          pinyin: py,
+          options,
+        });
       col = (col + 1) % columnCount;
       const endOfLine = i === lineArr.length - 1;
       const endOfRow = (i + 1) % columnCount === 0;

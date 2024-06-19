@@ -8,6 +8,7 @@ export interface CellState {
   color?: string;
   rotate?: boolean;
   border?: boolean;
+  options: string[];
 }
 interface DocumentState {
   config: {
