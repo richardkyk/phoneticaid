@@ -1,3 +1,5 @@
+"use client";
+
 import { useDocumentStore } from "~/lib/store";
 
 interface PrintablePageProps {

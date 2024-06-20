@@ -1,11 +1,15 @@
-import { useContext } from "react";
+"use client";
+
+import {
+  usePageSlicePageNum,
+  usePageSliceSize,
+} from "~/contexts/page-slice-context";
 import { useDocumentStore } from "~/lib/store";
 import { CellPopover } from "./cell-popover";
-import { PageSlicePageNumContext, PageSliceSizeContext } from "./page-slices";
 
 export function PageGrid() {
-  const pageNum = useContext(PageSlicePageNumContext);
-  const sliceSize = useContext(PageSliceSizeContext);
+  const pageNum = usePageSlicePageNum();
+  const sliceSize = usePageSliceSize();
 
   const rows = Array.from(Array(sliceSize)).map(
     (_, i) => i + pageNum * sliceSize,

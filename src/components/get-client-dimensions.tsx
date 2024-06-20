@@ -9,7 +9,6 @@ export function GetClientDimensions() {
 
   useEffect(() => {
     if (!pageRef.current) return;
-    void useDocumentStore.persist.rehydrate();
     const dimensions = pageRef.current.getBoundingClientRect();
     const { height, width } = dimensions;
     setDocument({ pageHeight: height, pageWidth: width });

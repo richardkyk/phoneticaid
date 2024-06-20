@@ -2,6 +2,7 @@ import "~/styles/globals.css";
 
 import { GeistSans } from "geist/font/sans";
 import { GetClientDimensions } from "~/components/get-client-dimensions";
+import { HydrationChecker } from "~/components/hydration-checker";
 import ToolBar from "~/components/tool-bar";
 import { Toaster } from "~/components/ui/sonner";
 
@@ -18,10 +19,12 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${GeistSans.variable} text-gray-700`}>
       <body>
-        <GetClientDimensions />
-        <ToolBar />
-        <Toaster />
-        {children}
+        <HydrationChecker>
+          <GetClientDimensions />
+          <ToolBar />
+          <Toaster />
+          {children}
+        </HydrationChecker>
       </body>
     </html>
   );
