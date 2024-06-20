@@ -1,40 +1,29 @@
-import { useEffect } from "react";
+"use client";
+
+import React from "react";
+import { useSliceSize } from "~/hooks/use-slice-size";
 import { useDocumentStore } from "~/lib/store";
-import { pageSlices } from "~/lib/utils";
-import { PrintablePage } from "./printable-page";
+
+export const PageSliceSizeContext = React.createContext<number>(0);
+export const PageSlicePageNumContext = React.createContext<number>(0);
 
 interface PageSlicesProps {
-  children: (rows: number[]) => React.ReactNode;
+  children: JSX.Element;
 }
-export function usePageSlices(props: PageSlicesProps) {
+export function PageSlices(props: PageSlicesProps) {
   const { children } = props;
-  const layout = useDocumentStore((state) => state.config.layout);
-  const textFlow = useDocumentStore((state) => state.config.textFlow);
 
-  const pageHeight = useDocumentStore((state) => state.config.pageHeight);
-  const pageWidth = useDocumentStore((state) => state.config.pageWidth);
+  const rowCount = useDocumentStore((state) => state.config.rowCount);
 
-  console.log("page slices", pageHeight, pageWidth);
+  const sliceSize = useSliceSize();
 
-  const overflowDimension =
-    textFlow === "horizontal"
-      ? layout === "portrait"
-        ? pageHeight
-        : pageWidth
-      : layout === "portrait"
-        ? pageWidth
-        : pageHeight;
+  const slices = Math.ceil(rowCount / sliceSize);
 
-  useEffect(() => {
-    const slices = pageSlices(overflowDimension);
-    console.log("slices", slices);
-  }, [overflowDimension]);
-
-  return null;
-
-  return pageSlices(overflowDimension).map((rows, i) => (
-    <PrintablePage key={i} pageNum={i}>
-      {children(rows)}
-    </PrintablePage>
+  return Array.from(Array(slices)).map((_, i) => (
+    <PageSliceSizeContext.Provider value={sliceSize} key={i}>
+      <PageSlicePageNumContext.Provider value={i}>
+        {React.cloneElement(children, { pageNum: i, key: i })}
+      </PageSlicePageNumContext.Provider>
+    </PageSliceSizeContext.Provider>
   ));
 }

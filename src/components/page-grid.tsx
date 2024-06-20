@@ -1,11 +1,15 @@
+import { useContext } from "react";
 import { useDocumentStore } from "~/lib/store";
 import { CellPopover } from "./cell-popover";
+import { PageSlicePageNumContext, PageSliceSizeContext } from "./page-slices";
 
-interface PageGridProps {
-  rows: number[];
-}
-export function PageGrid(props: PageGridProps) {
-  const { rows } = props;
+export function PageGrid() {
+  const pageNum = useContext(PageSlicePageNumContext);
+  const sliceSize = useContext(PageSliceSizeContext);
+
+  const rows = Array.from(Array(sliceSize)).map(
+    (_, i) => i + pageNum * sliceSize,
+  );
 
   const columnGap = useDocumentStore((state) => state.config.columnGap);
   const rowGap = useDocumentStore((state) => state.config.rowGap);

@@ -70,6 +70,7 @@ export async function generateGrid(input: string) {
 export function pageSlices(availableSpace: number) {
   console.log("calculating page slices");
   if (availableSpace === 0) return [];
+
   const rowCount = useDocumentStore.getState().config.rowCount;
 
   const mainFontSize = useDocumentStore.getState().config.mainTextSize;
