@@ -1,11 +1,21 @@
 import { PopoverTrigger } from "@radix-ui/react-popover";
-import { BoxSelect, RotateCw } from "lucide-react";
+import {
+  BoxSelect,
+  CircleX,
+  Ellipsis,
+  PaintBucket,
+  RotateCw,
+} from "lucide-react";
 import localFont from "next/font/local";
 import { useDocumentStore, type CellState } from "~/lib/store";
 import { Button } from "./ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
 import { Input } from "./ui/input";
 import { Popover, PopoverContent } from "./ui/popover";
-import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 
 const font = localFont({ src: "../fonts/KaiTi2.ttf" });
 
@@ -27,14 +37,8 @@ export function CellPopover(props: CellPopoverProps) {
 
   return (
     <Popover key={id}>
-      <PopoverTrigger>
-        <div
-          id={id}
-          className="flex flex-col border border-gray-100 hover:border-gray-500 print:border-transparent"
-          style={{
-            borderLeft: content.get(id)?.border ? "1px solid" : undefined,
-          }}
-        >
+      <PopoverTrigger className="data-[state=open]:outline data-[state=open]:outline-red-500">
+        <div id={id} className="flex flex-col">
           <div
             className="flex w-full items-center justify-center font-sans"
             style={{
@@ -44,10 +48,10 @@ export function CellPopover(props: CellPopoverProps) {
               marginBottom: `${offset}px`,
             }}
           >
-            {content.get(id)?.pinyin}
+            {content.get(id)?.pinyin2 ?? content.get(id)?.pinyin}
           </div>
           <div
-            className={`flex items-center justify-center ${font.className}`}
+            className={`flex items-center justify-center ${font.className} border border-gray-100 hover:border-gray-500 print:border-transparent`}
             style={{
               fontSize: `${mainTextSize}px`,
               lineHeight: `${mainTextSize}px`,
@@ -55,6 +59,7 @@ export function CellPopover(props: CellPopoverProps) {
               width: `${mainTextSize}px`,
               rotate: content.get(id)?.rotate ? "90deg" : undefined,
               color: content.get(id)?.color,
+              borderLeft: content.get(id)?.border ? "1px solid" : undefined,
             }}
           >
             {content.get(id)?.value}
@@ -63,51 +68,114 @@ export function CellPopover(props: CellPopoverProps) {
       </PopoverTrigger>
       <PopoverContent align="start" side="right">
         <div className="flex flex-col gap-2">
-          <Input
-            value={content.get(id)?.pinyin ?? ""}
-            onChange={(e) => {
-              const cell = content.get(id);
-              if (!cell) return;
-
-              setCell(id, {
-                pinyin: e.target.value,
-              });
-              setMod(cell.id, {
-                ...cell,
-                pinyin: e.target.value,
-              });
-            }}
-          />
-
-          <RadioGroup
-            className="flex justify-between gap-2 rounded-md border p-2"
-            value={content.get(id)?.color ?? ""}
-            onValueChange={(e) => {
-              const cell = content.get(id);
-              if (!cell) return;
-              setCell(id, { color: e });
-              setMod(cell.id, { ...cell, color: e });
-            }}
-          >
-            {["red", "yellow", "green", "blue", "purple", "pink", "aqua"].map(
-              (color) => (
-                <RadioGroupItem
-                  key={color}
-                  value={color}
-                  style={{
-                    backgroundColor: color,
-                    border: "transparent",
-                    color: "white",
-                  }}
-                />
-              ),
-            )}
-          </RadioGroup>
           <div className="flex gap-2">
+            <Input
+              value={content.get(id)?.pinyin2 ?? content.get(id)?.pinyin ?? ""}
+              onChange={(e) => {
+                const cell = content.get(id);
+                if (!cell) return;
+
+                setCell(id, {
+                  pinyin2: e.target.value,
+                });
+                setMod(cell.id, {
+                  ...cell,
+                  pinyin2: e.target.value,
+                });
+              }}
+            />
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="reset"
+                  className="size-8 shrink-0"
+                >
+                  <Ellipsis className="size-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="min-w-[2rem]">
+                <div className="flex flex-col gap-2">
+                  {content.get(id)?.options?.map((option) => (
+                    <Button
+                      variant="ghost"
+                      size="reset"
+                      className="px-2 py-1"
+                      key={option}
+                      onClick={() => {
+                        const cell = content.get(id);
+                        if (!cell) return;
+
+                        setCell(id, {
+                          pinyin2: option,
+                        });
+                        setMod(cell.id, {
+                          ...cell,
+                          pinyin2: option,
+                        });
+                      }}
+                    >
+                      {option}
+                    </Button>
+                  ))}
+                </div>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+
+          <div className="flex gap-2">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="reset"
+                  className="size-8 shrink-0"
+                >
+                  <PaintBucket className="size-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="min-w-[2rem]">
+                <div className="flex flex-col gap-2">
+                  {[
+                    "red",
+                    "yellow",
+                    "green",
+                    "blue",
+                    "purple",
+                    "pink",
+                    "aqua",
+                  ].map((color) => (
+                    <Button
+                      variant="ghost"
+                      size="reset"
+                      className="px-2 py-1"
+                      key={color}
+                      onClick={() => {
+                        const cell = content.get(id);
+                        if (!cell) return;
+
+                        setCell(id, {
+                          color,
+                        });
+                        setMod(cell.id, {
+                          ...cell,
+                          color,
+                        });
+                      }}
+                    >
+                      <div
+                        className="size-4 rounded-full"
+                        style={{ backgroundColor: color }}
+                      ></div>
+                    </Button>
+                  ))}
+                </div>
+              </DropdownMenuContent>
+            </DropdownMenu>
             <Button
-              variant="secondary"
+              variant="outline"
               size="reset"
-              className="p-1"
+              className="size-8"
               onClick={() => {
                 const cell = content.get(id);
                 if (!cell) return;
@@ -119,8 +187,8 @@ export function CellPopover(props: CellPopoverProps) {
               <RotateCw className="size-4" />
             </Button>
             <Button
-              variant="secondary"
-              className="p-1"
+              variant="outline"
+              className="size-8"
               size="reset"
               onClick={() => {
                 const cell = content.get(id);
@@ -132,25 +200,27 @@ export function CellPopover(props: CellPopoverProps) {
             >
               <BoxSelect className="size-4" />
             </Button>
+            <Button
+              variant="outline"
+              className="ml-auto size-8"
+              size="reset"
+              onClick={() => {
+                const cell = content.get(id);
+                if (!cell) return;
+                setCell(id, {
+                  value: cell.value,
+                  pinyin: cell.pinyin,
+                  pinyin2: undefined,
+                  color: undefined,
+                  rotate: undefined,
+                  border: undefined,
+                } as CellState);
+                setMod(cell.id, null);
+              }}
+            >
+              <CircleX className="size-4" />
+            </Button>
           </div>
-
-          <Button
-            variant="outline"
-            onClick={() => {
-              const cell = content.get(id);
-              if (!cell) return;
-              setCell(id, {
-                value: cell.value,
-                pinyin: cell.pinyin,
-                color: undefined,
-                rotate: undefined,
-                border: undefined,
-              } as CellState);
-              setMod(cell.id, null);
-            }}
-          >
-            Clear
-          </Button>
         </div>
       </PopoverContent>
     </Popover>

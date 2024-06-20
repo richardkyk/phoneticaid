@@ -2,15 +2,10 @@ import { useDocumentStore } from "~/lib/store";
 import { CellPopover } from "./cell-popover";
 
 interface PageGridProps {
-  pageNum: number;
+  rows: number[];
 }
 export function PageGrid(props: PageGridProps) {
-  const { pageNum } = props;
-
-  const sliceSize = useDocumentStore((state) => state.config.sliceSize);
-  const rows = Array.from(Array(sliceSize).keys()).map(
-    (i) => sliceSize * pageNum + i,
-  );
+  const { rows } = props;
 
   const columnGap = useDocumentStore((state) => state.config.columnGap);
   const rowGap = useDocumentStore((state) => state.config.rowGap);
