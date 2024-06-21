@@ -18,8 +18,6 @@ function PageGridRow(props: PageGridRowProps) {
   const align = useDocumentStore((state) => state.config.align);
   const textDirection = useDocumentStore((state) => state.config.textDirection);
 
-  console.log("page grid - row");
-
   return (
     <div
       className="flex"
@@ -54,8 +52,6 @@ function PageGridColumn(props: PageGridColumnProps) {
       ? "horizontal"
       : "vertical";
 
-  console.log("page grid - column");
-
   return (
     <div
       className="flex"
@@ -83,8 +79,6 @@ export function PageGrid(props: PageGridProps) {
 
   const pageNum = usePageSlicePageNum();
   const sliceSize = usePageSliceSize();
-
-  console.log("page grid - parent");
 
   const columnCount = useDocumentStore((state) => state.config.columnCount);
 

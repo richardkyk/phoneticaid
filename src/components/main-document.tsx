@@ -5,8 +5,6 @@ import { PrintablePage } from "./printable-page";
 import { ScaledDocument } from "./scaled-document";
 
 export function MainDocument() {
-  console.log("main document");
-
   return (
     <ScaledDocument>
       <PageSlices>

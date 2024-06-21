@@ -13,7 +13,6 @@ export function HydrationChecker(props: HydrationCheckerProps) {
   useEffect(() => {
     void useDocumentStore.persist.rehydrate();
     setIsHydrated(true);
-    console.log("hydrated");
   }, []);
 
   if (!isHydrated) return null;

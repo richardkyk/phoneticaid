@@ -27,8 +27,6 @@ export function CellPopover(props: CellPopoverProps) {
 
   const id = useCellId();
 
-  console.log("cell popover");
-
   const content = useDocumentStore((state) => state.content);
   const setCell = useDocumentStore((state) => state.setCell);
   const setMod = useDocumentStore((state) => state.setMod);
@@ -202,7 +200,6 @@ export function CellPopover(props: CellPopoverProps) {
 export function CellContent() {
   const id = useCellId();
 
-  console.log("cell content");
   const mainTextSize = useDocumentStore((state) => state.config.mainTextSize);
   const secondaryTextSize = useDocumentStore(
     (state) => state.config.secondaryTextSize,

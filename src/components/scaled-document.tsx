@@ -10,8 +10,6 @@ export function ScaledDocument(props: ScaledDocumentProps) {
 
   const zoom = useDocumentStore((state) => state.config.zoom);
 
-  console.log("scaled document");
-
   return (
     <div
       id="scaled-document"
