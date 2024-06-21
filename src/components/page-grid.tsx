@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { CellIdProvider } from "~/contexts/cell-id-context";
 import {
   usePageSlicePageNum,
   usePageSliceSize,
@@ -96,12 +97,14 @@ export function PageGrid(props: PageGridProps) {
     <PageGridRow>
       {rows.map((row) => (
         <PageGridColumn key={row}>
-          {cols.map((col) =>
-            React.cloneElement(children, {
-              id: `${row}:${col}`,
-              key: `${row}:${col}`,
-            }),
-          )}
+          {cols.map((col) => (
+            <CellIdProvider cellId={`${row}:${col}`} key={`${row}:${col}`}>
+              {React.cloneElement(children, {
+                id: `${row}:${col}`,
+                key: `${row}:${col}`,
+              })}
+            </CellIdProvider>
+          ))}
         </PageGridColumn>
       ))}
     </PageGridRow>

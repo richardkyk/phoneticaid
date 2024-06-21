@@ -8,6 +8,7 @@ import {
   PaintBucket,
   RotateCw,
 } from "lucide-react";
+import { useCellId } from "~/contexts/cell-id-context";
 import { useDocumentStore, type CellState } from "~/lib/store";
 import { Button } from "./ui/button";
 import {
@@ -19,52 +20,23 @@ import { Input } from "./ui/input";
 import { Popover, PopoverContent } from "./ui/popover";
 
 interface CellPopoverProps {
-  id?: string;
+  children: React.ReactNode;
 }
 export function CellPopover(props: CellPopoverProps) {
-  const { id = "" } = props;
+  const { children } = props;
+
+  const id = useCellId();
 
   console.log("cell popover");
-  const mainTextSize = useDocumentStore((state) => state.config.mainTextSize);
-  const secondaryTextSize = useDocumentStore(
-    (state) => state.config.secondaryTextSize,
-  );
-  const offset = useDocumentStore((state) => state.config.offset);
 
   const content = useDocumentStore((state) => state.content);
   const setCell = useDocumentStore((state) => state.setCell);
   const setMod = useDocumentStore((state) => state.setMod);
 
   return (
-    <Popover key={id}>
+    <Popover>
       <PopoverTrigger className="data-[state=open]:outline data-[state=open]:outline-red-500">
-        <div id={id} className="flex flex-col">
-          <div
-            className="flex w-full items-center justify-center font-sans"
-            style={{
-              fontSize: `${secondaryTextSize}px`,
-              height: `${secondaryTextSize}px`,
-              lineHeight: `${secondaryTextSize}px`,
-              marginBottom: `${offset}px`,
-            }}
-          >
-            {content.get(id)?.pinyin2 ?? content.get(id)?.pinyin}
-          </div>
-          <div
-            className={`font-cn flex items-center justify-center border border-gray-100 hover:border-gray-500 print:border-transparent`}
-            style={{
-              fontSize: `${mainTextSize}px`,
-              lineHeight: `${mainTextSize}px`,
-              height: `${mainTextSize}px`,
-              width: `${mainTextSize}px`,
-              rotate: content.get(id)?.rotate ? "90deg" : undefined,
-              color: content.get(id)?.color,
-              borderLeft: content.get(id)?.border ? "1px solid" : undefined,
-            }}
-          >
-            {content.get(id)?.value}
-          </div>
-        </div>
+        {children}
       </PopoverTrigger>
       <PopoverContent align="start" side="right">
         <div className="flex flex-col gap-2">
@@ -224,5 +196,48 @@ export function CellPopover(props: CellPopoverProps) {
         </div>
       </PopoverContent>
     </Popover>
+  );
+}
+
+export function CellContent() {
+  const id = useCellId();
+
+  console.log("cell content");
+  const mainTextSize = useDocumentStore((state) => state.config.mainTextSize);
+  const secondaryTextSize = useDocumentStore(
+    (state) => state.config.secondaryTextSize,
+  );
+  const offset = useDocumentStore((state) => state.config.offset);
+
+  const content = useDocumentStore((state) => state.content);
+
+  return (
+    <div className="flex flex-col">
+      <div
+        className="flex w-full items-center justify-center font-sans"
+        style={{
+          fontSize: `${secondaryTextSize}px`,
+          height: `${secondaryTextSize}px`,
+          lineHeight: `${secondaryTextSize}px`,
+          marginBottom: `${offset}px`,
+        }}
+      >
+        {content.get(id)?.pinyin2 ?? content.get(id)?.pinyin}
+      </div>
+      <div
+        className={`font-cn flex items-center justify-center border border-gray-100 hover:border-gray-500 print:border-transparent`}
+        style={{
+          fontSize: `${mainTextSize}px`,
+          lineHeight: `${mainTextSize}px`,
+          height: `${mainTextSize}px`,
+          width: `${mainTextSize}px`,
+          rotate: content.get(id)?.rotate ? "90deg" : undefined,
+          color: content.get(id)?.color,
+          borderLeft: content.get(id)?.border ? "1px solid" : undefined,
+        }}
+      >
+        {content.get(id)?.value}
+      </div>
+    </div>
   );
 }
