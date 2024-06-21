@@ -1,3 +1,5 @@
+"use client";
+
 import { PopoverTrigger } from "@radix-ui/react-popover";
 import {
   BoxSelect,
@@ -20,11 +22,12 @@ import { Popover, PopoverContent } from "./ui/popover";
 const font = localFont({ src: "../fonts/KaiTi2.ttf" });
 
 interface CellPopoverProps {
-  id: string;
+  id?: string;
 }
 export function CellPopover(props: CellPopoverProps) {
-  const { id } = props;
+  const { id = "" } = props;
 
+  console.log("cell popover");
   const mainTextSize = useDocumentStore((state) => state.config.mainTextSize);
   const secondaryTextSize = useDocumentStore(
     (state) => state.config.secondaryTextSize,

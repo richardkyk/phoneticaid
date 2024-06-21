@@ -1,34 +1,23 @@
 "use client";
 
+import React from "react";
 import {
   usePageSlicePageNum,
   usePageSliceSize,
 } from "~/contexts/page-slice-context";
 import { useDocumentStore } from "~/lib/store";
-import { CellPopover } from "./cell-popover";
 
-export function PageGrid() {
-  const pageNum = usePageSlicePageNum();
-  const sliceSize = usePageSliceSize();
+interface PageGridRowProps {
+  children: React.ReactNode;
+}
+function PageGridRow(props: PageGridRowProps) {
+  const { children } = props;
 
-  const rows = Array.from(Array(sliceSize)).map(
-    (_, i) => i + pageNum * sliceSize,
-  );
-
-  const columnGap = useDocumentStore((state) => state.config.columnGap);
   const rowGap = useDocumentStore((state) => state.config.rowGap);
-
   const align = useDocumentStore((state) => state.config.align);
   const textDirection = useDocumentStore((state) => state.config.textDirection);
 
-  const columnCount = useDocumentStore((state) => state.config.columnCount);
-
-  console.log("page grid");
-
-  const textFlow =
-    textDirection === "ltr" || textDirection === "rtl"
-      ? "horizontal"
-      : "vertical";
+  console.log("page grid - row");
 
   return (
     <div
@@ -44,28 +33,77 @@ export function PageGrid() {
               : "column",
       }}
     >
-      {rows.map((row) => (
-        <div
-          key={row}
-          className="flex"
-          style={{
-            gap: `${columnGap}px`,
-            justifyContent: align,
-            flexDirection:
-              textFlow === "vertical"
-                ? "column"
-                : textDirection === "rtl"
-                  ? "row-reverse"
-                  : "row",
-          }}
-        >
-          {Array(columnCount)
-            .fill(0)
-            .map((_, j) => (
-              <CellPopover id={`${row}:${j}`} key={`${row}:${j}`} />
-            ))}
-        </div>
-      ))}
+      {children}
     </div>
+  );
+}
+
+interface PageGridColumnProps {
+  children: React.ReactNode;
+}
+function PageGridColumn(props: PageGridColumnProps) {
+  const { children } = props;
+
+  const columnGap = useDocumentStore((state) => state.config.columnGap);
+  const align = useDocumentStore((state) => state.config.align);
+  const textDirection = useDocumentStore((state) => state.config.textDirection);
+
+  const textFlow =
+    textDirection === "ltr" || textDirection === "rtl"
+      ? "horizontal"
+      : "vertical";
+
+  console.log("page grid - column");
+
+  return (
+    <div
+      className="flex"
+      style={{
+        gap: `${columnGap}px`,
+        justifyContent: align,
+        flexDirection:
+          textFlow === "vertical"
+            ? "column"
+            : textDirection === "rtl"
+              ? "row-reverse"
+              : "row",
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
+interface PageGridProps {
+  children: JSX.Element;
+}
+export function PageGrid(props: PageGridProps) {
+  const { children } = props;
+
+  const pageNum = usePageSlicePageNum();
+  const sliceSize = usePageSliceSize();
+
+  console.log("page grid - parent");
+
+  const columnCount = useDocumentStore((state) => state.config.columnCount);
+
+  const rows = Array.from(Array(sliceSize)).map(
+    (_, i) => i + pageNum * sliceSize,
+  );
+  const cols = Array.from(Array(columnCount)).map((_, i) => i);
+
+  return (
+    <PageGridRow>
+      {rows.map((row) => (
+        <PageGridColumn key={row}>
+          {cols.map((col) =>
+            React.cloneElement(children, {
+              id: `${row}:${col}`,
+              key: `${row}:${col}`,
+            }),
+          )}
+        </PageGridColumn>
+      ))}
+    </PageGridRow>
   );
 }

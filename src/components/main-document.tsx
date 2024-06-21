@@ -1,3 +1,4 @@
+import { CellPopover } from "./cell-popover";
 import { PageGrid } from "./page-grid";
 import { PageSlices } from "./page-slices";
 import { PrintablePage } from "./printable-page";
@@ -10,7 +11,9 @@ export function MainDocument() {
     <ScaledDocument>
       <PageSlices>
         <PrintablePage>
-          <PageGrid />
+          <PageGrid>
+            <CellPopover />
+          </PageGrid>
         </PrintablePage>
       </PageSlices>
     </ScaledDocument>
