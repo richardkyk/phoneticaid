@@ -21,7 +21,6 @@ import {
   UnfoldHorizontal,
   ZoomIn,
 } from "lucide-react";
-import localFont from "next/font/local";
 import React, { useEffect, useRef } from "react";
 import { punctuation, specialCharacters } from "~/lib/constants";
 import { useDocumentStore } from "~/lib/store";
@@ -33,8 +32,6 @@ import { Select, SelectContent, SelectItem } from "./ui/select";
 import { Separator } from "./ui/separator";
 import { Slider } from "./ui/slider";
 import { Textarea } from "./ui/textarea";
-
-const font = localFont({ src: "../fonts/KaiTi2.ttf" });
 
 export default function ToolBar() {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -96,7 +93,7 @@ export default function ToolBar() {
                   setUserInput(e.target.value);
                 }}
                 onBlur={(e) => e.target.focus()}
-                className={`flex-1 ${font.className}`}
+                className={`font-cn flex-1`}
                 placeholder="Enter Chinese text here"
               />
 
@@ -413,7 +410,7 @@ function CharacterPopover(props: CharacterPopoverProps) {
               variant="ghost"
               size="reset"
               key={symbol}
-              className={`size-4 ${font.className}`}
+              className={`font-cn size-4`}
               onClick={async () => {
                 if (!textareaRef.current) return;
                 const start = textareaRef.current.selectionStart;

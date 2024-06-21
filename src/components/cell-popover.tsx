@@ -8,7 +8,6 @@ import {
   PaintBucket,
   RotateCw,
 } from "lucide-react";
-import localFont from "next/font/local";
 import { useDocumentStore, type CellState } from "~/lib/store";
 import { Button } from "./ui/button";
 import {
@@ -18,8 +17,6 @@ import {
 } from "./ui/dropdown-menu";
 import { Input } from "./ui/input";
 import { Popover, PopoverContent } from "./ui/popover";
-
-const font = localFont({ src: "../fonts/KaiTi2.ttf" });
 
 interface CellPopoverProps {
   id?: string;
@@ -54,7 +51,7 @@ export function CellPopover(props: CellPopoverProps) {
             {content.get(id)?.pinyin2 ?? content.get(id)?.pinyin}
           </div>
           <div
-            className={`flex items-center justify-center ${font.className} border border-gray-100 hover:border-gray-500 print:border-transparent`}
+            className={`font-cn flex items-center justify-center border border-gray-100 hover:border-gray-500 print:border-transparent`}
             style={{
               fontSize: `${mainTextSize}px`,
               lineHeight: `${mainTextSize}px`,
